@@ -1,0 +1,7 @@
+/home/cullen/Programs/clion-2017.2.2/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/cullen/Code/school/pong
+-- Found SFML .. in /usr/include
+-- Using user specified build type: DEBUG
+-- Adding executable: pong
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/cullen/Code/school/pong/cmake-build-debug
