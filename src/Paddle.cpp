@@ -16,7 +16,7 @@ Paddle::Paddle(float x, float y) {
     setPosition(x, y);
 
     // Set default speed.
-    speed = 10;
+    speed = 200;
 }
 
 // Use a custom rectangle shape for the paddle.
@@ -24,15 +24,33 @@ Paddle::Paddle(float x, float y, sf::RectangleShape shape) : RectangleShape(shap
     // Set x and y position.
     setPosition(x,y);
     // Set default speed.
-    speed = 10;
+    speed = 200;
 }
 
-void Paddle::moveUp(float distance) {
-    move(0, -distance);
+void Paddle::moveUp(float deltaTime) {
+    // Calculate movement distance.
+    float distance = deltaTime * speed;
+    // Don't let the paddle move off-screen.
+    sf::FloatRect bounds = getGlobalBounds();
+    float top = bounds.top;
+    if (top - distance <= 0) {
+        move(0, -top);
+    } else {
+        move(0, -distance);
+    }
 }
 
-void Paddle::moveDown(float distance) {
-    move(0, distance);
+void Paddle::moveDown(float deltaTime) {
+    // Calculate movement distance.
+    float distance = deltaTime * speed;
+    // Don't let the paddle move off-screen.
+    sf::FloatRect bounds = getGlobalBounds();
+    float bottom = bounds.top + bounds.height;
+    if (bottom + distance >= GC::HEIGHT) {
+        move(0, GC::HEIGHT - bottom);
+    } else {
+        move(0, distance);
+    }
 }
 
 float Paddle::getSpeed() {
@@ -41,4 +59,16 @@ float Paddle::getSpeed() {
 
 void Paddle::setSpeed(float speed) {
     this->speed = speed;
+}
+
+// AI-controlled movement. Takes ball position and tries to move to it.
+void Paddle::moveAsAI(sf::Vector2f ballPosition, float deltaTime) {
+    // If the paddle's center is above the ball, move down.
+    if (ballPosition.y > getPosition().y) {
+        moveDown(deltaTime);
+    }
+    // If the paddle's center is below the ball, move up.
+    else if (ballPosition.x < getPosition().y) {
+        moveUp(deltaTime);
+    }
 }

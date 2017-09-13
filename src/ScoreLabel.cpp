@@ -32,7 +32,8 @@ void ScoreLabel::reset() {
     updateOrigin();
 }
 
+// Move the origin to the center of the text.
 void ScoreLabel::updateOrigin() {
     sf::FloatRect dimensions = getLocalBounds();
-    setOrigin(dimensions.width / 2.f, dimensions.height / 2.f);
+    setOrigin(dimensions.left + (dimensions.width / 2.f), dimensions.top + (dimensions.height / 2.f));
 }

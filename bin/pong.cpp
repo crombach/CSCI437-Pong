@@ -10,8 +10,7 @@
 #include <Paddle.h>
 #include <Ball.h>
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     // Define window constants.
     const uint COLOR_DEPTH = 32;
     const std::string WINDOW_TITLE = "Pong - Cullen Rombach";
@@ -37,27 +36,59 @@ int main(int argc, char** argv)
     Paddle aiPaddle = Paddle(GC::WIDTH - (GC::WIDTH / 40.f), GC::HEIGHT / 2.f);
     Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
 
+    // Game state flags.
+    bool inGame = true;
+
+    // Timer.
+    sf::Clock clock;
+
     // Start main loop
-    while(window.isOpen())
-    {
+    while(window.isOpen()) {
         // Process events
         sf::Event Event;
-        while(window.pollEvent(Event))
-        {
-            // Exit
-            if(Event.type == sf::Event::Closed)
-                window.close();
+        while(window.pollEvent(Event)) {
+            // Exit when the window is closed.
+            if (Event.type == sf::Event::Closed) {
+            window.close();
+            }
+        }
+
+        // Handle game events if we are in-game.
+        if (inGame) {
+            // Store time passed since last frame.
+            float dTime = clock.restart().asSeconds();
+
+            // Move the player's paddle if commanded.
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+                playerPaddle.moveUp(dTime);
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+                playerPaddle.moveDown(dTime);
+            }
+
+            // Move the AI paddle.
+            aiPaddle.moveAsAI(ball.getPosition(), dTime);
+
+            // Move the ball.
+            ball.move(dTime);
+
+            // Check for a score.
+            // Check for a paddle hit.
         }
 
         // Clear screen and fill with black
         window.clear(sf::Color::Black);
 
-        // Draw actors and labels.
-        window.draw(playerScore);
-        window.draw(aiScore);
-        window.draw(playerPaddle);
-        window.draw(aiPaddle);
-        window.draw(ball);
+        // Draw actors and scores if in-game.
+        if (inGame) {
+            window.draw(playerScore);
+            window.draw(aiScore);
+            window.draw(playerPaddle);
+            window.draw(aiPaddle);
+            window.draw(ball);
+        }
+
+        // TODO: Otherwise, draw pause screen.
 
         // Display rendered image.
         window.display();

@@ -18,6 +18,7 @@ public:
     // Movement methods.
     void moveUp(float distance);
     void moveDown(float distance);
+    void moveAsAI(sf::Vector2f ballPosition, float deltaTime);
     // Getters and setters.
     float getSpeed();
     void setSpeed(float speed);

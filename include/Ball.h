@@ -11,6 +11,8 @@
 class Ball : public sf::CircleShape {
     float dx; // x axis speed
     float dy; // y axis speed
+private:
+    void randomizeMovement();
 public:
     // Constructors.
     Ball(float x, float y);
@@ -20,7 +22,7 @@ public:
     void setDy(float dy);
     void bounceX();
     void bounceY();
-    void move();
+    void move(float deltaTime);
 };
 
 
