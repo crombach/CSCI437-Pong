@@ -37,3 +37,7 @@ void ScoreLabel::updateOrigin() {
     sf::FloatRect dimensions = getLocalBounds();
     setOrigin(dimensions.left + (dimensions.width / 2.f), dimensions.top + (dimensions.height / 2.f));
 }
+
+uint ScoreLabel::getScore() {
+    return score;
+}

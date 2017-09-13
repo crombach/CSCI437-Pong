@@ -39,25 +39,21 @@ void Ball::setDy(float dy) {
 void Ball::bounceX() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-10, 10);
+    std::uniform_real_distribution<float> perturbationDistribution(-20, 20);
     float deltaDx = perturbationDistribution(randomEngine);
-    float deltaDy = perturbationDistribution(randomEngine);
 
     // Add a small random perturbation.
     dx = -(dx + deltaDx);
-    dy = dy + deltaDy;
 }
 
 void Ball::bounceY() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-10, 10);
-    float deltaDx = perturbationDistribution(randomEngine);
+    std::uniform_real_distribution<float> perturbationDistribution(-20, 20);
     float deltaDy = perturbationDistribution(randomEngine);
 
     // Add a small random perturbation.
     dy = -(dy + deltaDy);
-    dx = dx + deltaDx;
 }
 
 void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {

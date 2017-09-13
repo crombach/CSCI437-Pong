@@ -17,6 +17,7 @@ public:
     // Constructor
     ScoreLabel(float x, float y, sf::Font *font);
     // Scoring methods.
+    uint getScore();
     void increment();
     void reset();
 };

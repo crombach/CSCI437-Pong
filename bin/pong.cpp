@@ -9,7 +9,21 @@
 #include <GC.h>
 #include <Paddle.h>
 #include <Ball.h>
+#include <unistd.h>
 
+// Calculate a central origin for the given Text object.
+void centerTextOrigin(sf::Text *text) {
+    sf::FloatRect localBounds = text->getLocalBounds();
+    text->setOrigin(localBounds.left + (localBounds.width / 2), localBounds.top + (localBounds.height / 2));
+}
+
+// Take two Text objects and center them.
+void centerTwoTexts(sf::Text *top, sf::Text *bottom) {
+    top->setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) - top->getLocalBounds().height);
+    bottom->setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) + bottom->getLocalBounds().height);
+}
+
+// Main function containing game loop.
 int main(int argc, char** argv) {
     // Define window constants.
     const uint COLOR_DEPTH = 32;
@@ -33,28 +47,30 @@ int main(int argc, char** argv) {
     }
 
     // Store some messages to use when the game is paused.
-    std::string pauseText = "PRESS SPACE TO CONTINUE";
-    std::string reminderText = "PRESS SPACE AT ANY TIME TO PAUSE";
+    std::string pauseHeader = "PRESS SPACE TO CONTINUE";
+    std::string winHeader = "YOU WIN";
+    std::string lossHeader = "YOU LOSE";
+    std::string pauseSubheader = "PRESS [SPACE] AT ANY TIME TO PAUSE";
+    std::string endGameSubheader = "PRESS [SPACE] TO RETRY OR [ESC] TO QUIT";
 
-    // Create a message Text object.
-    sf::Text message;
-    message.setFont(wargames);
-    message.setString(pauseText);
-    message.setColor(sf::Color::White);
-    sf::FloatRect messageRect = message.getLocalBounds();
-    message.setOrigin(messageRect.left + (messageRect.width / 2), messageRect.top + (messageRect.height / 2));
+    // Create a header Text object for use during game pauses.
+    sf::Text header;
+    header.setFont(wargames);
+    header.setCharacterSize(GC::HEIGHT / 12);
+    header.setString(pauseHeader);
+    header.setColor(sf::Color::White);
+    centerTextOrigin(&header);
 
-    // Create a reminder Text object.
-    sf::Text reminder;
-    reminder.setFont(autobus);
-    reminder.setString(reminderText);
-    reminder.setColor(sf::Color(60, 60, 60));
-    sf::FloatRect reminderRect = reminder.getLocalBounds();
-    reminder.setOrigin(reminderRect.left + (reminderRect.width / 2), reminderRect.top + (reminderRect.height / 2));
+    // Create a subheader Text object for use during game pauses.
+    sf::Text subheader;
+    subheader.setFont(autobus);
+    subheader.setCharacterSize(GC::HEIGHT / 16);
+    subheader.setString(pauseSubheader);
+    subheader.setColor(sf::Color(60, 60, 60));
+    centerTextOrigin(&subheader);
 
     // Set message and reminder position.
-    message.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) - messageRect.height);
-    reminder.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) + reminderRect.height);
+    centerTwoTexts(&header, &subheader);
 
     // Create score labels.
     ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, &wargames);
@@ -68,7 +84,8 @@ int main(int argc, char** argv) {
     Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
 
     // Game state flags.
-    bool inGame = false;
+    bool paused = true;
+    bool gameOver = false;
 
     // Timer.
     sf::Clock clock;
@@ -83,19 +100,35 @@ int main(int argc, char** argv) {
                 window.close();
             }
 
+            // Allow the player to quit with the escape button.
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape) {
+                window.close();
+            }
+
             // Control pausing with the space bar.
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
-                inGame = !inGame;
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+                // If the game is over, mark it as not over and reset the text labels.
+                if (gameOver) {
+                    gameOver = false;
+                    header.setString(pauseHeader);
+                    subheader.setString(pauseSubheader);
+                }
+                // Pause/unpause.
+                paused = !paused;
+                // Give the player a small amount of time to prepare.
+                if (!paused) {
+                    usleep(50000);
+                }
+            }
+
+            // Pause if the game loses focus.
+            if (event.type == sf::Event::LostFocus) {
+                paused = true;
             }
         }
 
-        // Display a pause screen if we are paused.
-        if (!inGame) {
-
-        }
-
         // Handle game events if we are in-game.
-        else {
+        if (!paused) {
             // Store time passed since last frame.
             float dTime = clock.restart().asSeconds();
 
@@ -110,13 +143,12 @@ int main(int argc, char** argv) {
             // Move the AI paddle.
             aiPaddle.moveAsAI(ball.getPosition(), dTime);
 
-            // Move the ball. This also checks for paddle hits.
+            // Move the ball. This also checks for collisions.
             ball.move(dTime, &playerPaddle, &aiPaddle);
 
             // Check for a player point.
             if (ball.getPosition().x + ball.getRadius() >= GC::WIDTH) {
                 playerScore.increment();
-                // TODO: May want to pause the game here.
                 playerPaddle.reset(true);
                 aiPaddle.reset(false);
                 ball.reset();
@@ -125,31 +157,59 @@ int main(int argc, char** argv) {
             // Check for an AI point.
             if (ball.getPosition().x - ball.getRadius() <= 0) {
                 aiScore.increment();
-                // TODO: May want to pause the game here.
                 playerPaddle.reset(true);
                 aiPaddle.reset(false);
                 ball.reset();
+            }
+
+            // Check for win/loss.
+            if (playerScore.getScore() == 11 || aiScore.getScore() == 11) {
+                // If the player won, give then the winner text.
+                if (playerScore.getScore() == 11) {
+                    header.setString(winHeader);
+                }
+                // If they lost, given them the loser text.
+                if (aiScore.getScore() == 11) {
+                    header.setString(lossHeader);
+                }
+
+                // Set subheader text.
+                subheader.setString(endGameSubheader);
+
+                // Update the text origins and positioning.
+                centerTextOrigin(&header);
+                centerTextOrigin(&subheader);
+                centerTwoTexts(&header, &subheader);
+
+                // Reset game elements.
+                playerScore.reset();
+                aiScore.reset();
+                playerPaddle.reset(true);
+                aiPaddle.reset(false);
+                ball.reset();
+
+                // Pause the game on the end screen.
+                paused = true;
+                gameOver = true;
             }
         }
 
         // Clear screen and fill with black
         window.clear(sf::Color::Black);
 
-        // Draw actors and scores if in-game.
-        if (inGame) {
+        // If paused, draw pause messages.
+        if (paused) {
+            window.draw(header);
+            window.draw(subheader);
+        }
+        // Draw game components if not paused or game over.
+        else {
             window.draw(playerScore);
             window.draw(aiScore);
             window.draw(playerPaddle);
             window.draw(aiPaddle);
             window.draw(ball);
         }
-        // If paused, draw pause messages.
-        else {
-            window.draw(message);
-            window.draw(reminder);
-        }
-
-        // TODO: Otherwise, draw pause screen.
 
         // Display rendered image.
         window.display();
