@@ -30,6 +30,10 @@ SFML/Graphics/RectangleShape.hpp
 SFML/Graphics/Text.hpp
 -
 
+../include/TextUtils.h
+SFML/Graphics/Text.hpp
+-
+
 /home/cullen/Code/school/pong/bin/pong.cpp
 SFML/Graphics.hpp
 -
@@ -42,6 +46,8 @@ Paddle.h
 Ball.h
 -
 unistd.h
+-
+TextUtils.h
 -
 
 /home/cullen/Code/school/pong/src/Ball.cpp
@@ -66,5 +72,13 @@ GC.h
 GC.h
 -
 ScoreLabel.h
+-
+TextUtils.h
+-
+
+/home/cullen/Code/school/pong/src/TextUtils.cpp
+GC.h
+-
+TextUtils.h
 -
 

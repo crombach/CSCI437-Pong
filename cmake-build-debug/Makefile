@@ -283,6 +283,36 @@ src/ScoreLabel.cpp.s:
 	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/ScoreLabel.cpp.s
 .PHONY : src/ScoreLabel.cpp.s
 
+src/TextUtils.o: src/TextUtils.cpp.o
+
+.PHONY : src/TextUtils.o
+
+# target to build an object file
+src/TextUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/TextUtils.cpp.o
+	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/TextUtils.cpp.o
+.PHONY : src/TextUtils.cpp.o
+
+src/TextUtils.i: src/TextUtils.cpp.i
+
+.PHONY : src/TextUtils.i
+
+# target to preprocess a source file
+src/TextUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/TextUtils.cpp.i
+	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/TextUtils.cpp.i
+.PHONY : src/TextUtils.cpp.i
+
+src/TextUtils.s: src/TextUtils.cpp.s
+
+.PHONY : src/TextUtils.s
+
+# target to generate assembly for a file
+src/TextUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/TextUtils.cpp.s
+	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/TextUtils.cpp.s
+.PHONY : src/TextUtils.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -308,6 +338,9 @@ help:
 	@echo "... src/ScoreLabel.o"
 	@echo "... src/ScoreLabel.i"
 	@echo "... src/ScoreLabel.s"
+	@echo "... src/TextUtils.o"
+	@echo "... src/TextUtils.i"
+	@echo "... src/TextUtils.s"
 .PHONY : help
 
 

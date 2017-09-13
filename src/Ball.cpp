@@ -111,7 +111,6 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
         }
         case TOP_LEFT : {
             bounceX();
-            bounceY();
             break;
         }
         case BOTTOM : {
@@ -122,7 +121,6 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
         }
         case BOTTOM_LEFT : {
             bounceX();
-            bounceY();
             break;
         }
         default : break;

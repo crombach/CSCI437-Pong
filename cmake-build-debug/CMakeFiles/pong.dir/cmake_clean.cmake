@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/pong.dir/src/Ball.cpp.o"
   "CMakeFiles/pong.dir/src/ScoreLabel.cpp.o"
   "CMakeFiles/pong.dir/src/CollisionUtils.cpp.o"
+  "CMakeFiles/pong.dir/src/TextUtils.cpp.o"
   "pong.pdb"
   "pong"
 )

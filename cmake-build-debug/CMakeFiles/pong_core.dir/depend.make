@@ -18,5 +18,10 @@ CMakeFiles/pong_core.dir/src/Paddle.cpp.o: ../src/Paddle.cpp
 
 CMakeFiles/pong_core.dir/src/ScoreLabel.cpp.o: ../include/GC.h
 CMakeFiles/pong_core.dir/src/ScoreLabel.cpp.o: ../include/ScoreLabel.h
+CMakeFiles/pong_core.dir/src/ScoreLabel.cpp.o: ../include/TextUtils.h
 CMakeFiles/pong_core.dir/src/ScoreLabel.cpp.o: ../src/ScoreLabel.cpp
+
+CMakeFiles/pong_core.dir/src/TextUtils.cpp.o: ../include/GC.h
+CMakeFiles/pong_core.dir/src/TextUtils.cpp.o: ../include/TextUtils.h
+CMakeFiles/pong_core.dir/src/TextUtils.cpp.o: ../src/TextUtils.cpp
 

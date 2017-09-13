@@ -10,18 +10,7 @@
 #include <Paddle.h>
 #include <Ball.h>
 #include <unistd.h>
-
-// Calculate a central origin for the given Text object.
-void centerTextOrigin(sf::Text *text) {
-    sf::FloatRect localBounds = text->getLocalBounds();
-    text->setOrigin(localBounds.left + (localBounds.width / 2), localBounds.top + (localBounds.height / 2));
-}
-
-// Take two Text objects and center them.
-void centerTwoTexts(sf::Text *top, sf::Text *bottom) {
-    top->setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) - top->getLocalBounds().height);
-    bottom->setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) + bottom->getLocalBounds().height);
-}
+#include <TextUtils.h>
 
 // Main function containing game loop.
 int main(int argc, char** argv) {
@@ -56,21 +45,21 @@ int main(int argc, char** argv) {
     // Create a header Text object for use during game pauses.
     sf::Text header;
     header.setFont(wargames);
-    header.setCharacterSize(GC::HEIGHT / 12);
+    header.setCharacterSize(GC::HEIGHT / 16);
     header.setString(pauseHeader);
     header.setColor(sf::Color::White);
-    centerTextOrigin(&header);
+    TextUtils::centerTextOrigin(&header);
 
     // Create a subheader Text object for use during game pauses.
     sf::Text subheader;
     subheader.setFont(autobus);
-    subheader.setCharacterSize(GC::HEIGHT / 16);
+    subheader.setCharacterSize(GC::HEIGHT / 18);
     subheader.setString(pauseSubheader);
     subheader.setColor(sf::Color(60, 60, 60));
-    centerTextOrigin(&subheader);
+    TextUtils::centerTextOrigin(&subheader);
 
     // Set message and reminder position.
-    centerTwoTexts(&header, &subheader);
+    TextUtils::centerTwoTexts(&header, &subheader);
 
     // Create score labels.
     ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, &wargames);
@@ -177,9 +166,9 @@ int main(int argc, char** argv) {
                 subheader.setString(endGameSubheader);
 
                 // Update the text origins and positioning.
-                centerTextOrigin(&header);
-                centerTextOrigin(&subheader);
-                centerTwoTexts(&header, &subheader);
+                TextUtils::centerTextOrigin(&header);
+                TextUtils::centerTextOrigin(&subheader);
+                TextUtils::centerTwoTexts(&header, &subheader);
 
                 // Reset game elements.
                 playerScore.reset();

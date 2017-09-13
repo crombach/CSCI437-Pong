@@ -4,6 +4,7 @@
 
 #include <GC.h>
 #include <ScoreLabel.h>
+#include <TextUtils.h>
 
 ScoreLabel::ScoreLabel(float x, float y, sf::Font *font) {
     // Set initial score to zero.
@@ -16,26 +17,20 @@ ScoreLabel::ScoreLabel(float x, float y, sf::Font *font) {
     setString(std::to_string(score));
 
     // Handle size and positioning
-    updateOrigin();
+    TextUtils::centerTextOrigin(this);
     setPosition(x, y);
 }
 
 void ScoreLabel::increment() {
     score++;
     setString(std::to_string(score));
-    updateOrigin();
+    TextUtils::centerTextOrigin(this);
 }
 
 void ScoreLabel::reset() {
     score = 0;
     setString(std::to_string(score));
-    updateOrigin();
-}
-
-// Move the origin to the center of the text.
-void ScoreLabel::updateOrigin() {
-    sf::FloatRect dimensions = getLocalBounds();
-    setOrigin(dimensions.left + (dimensions.width / 2.f), dimensions.top + (dimensions.height / 2.f));
+    TextUtils::centerTextOrigin(this);
 }
 
 uint ScoreLabel::getScore() {

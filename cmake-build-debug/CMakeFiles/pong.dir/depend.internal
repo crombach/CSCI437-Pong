@@ -6,6 +6,7 @@ CMakeFiles/pong.dir/bin/pong.cpp.o
  ../include/GC.h
  ../include/Paddle.h
  ../include/ScoreLabel.h
+ ../include/TextUtils.h
  /home/cullen/Code/school/pong/bin/pong.cpp
 CMakeFiles/pong.dir/src/Ball.cpp.o
  ../include/Ball.h
@@ -25,4 +26,9 @@ CMakeFiles/pong.dir/src/Paddle.cpp.o
 CMakeFiles/pong.dir/src/ScoreLabel.cpp.o
  ../include/GC.h
  ../include/ScoreLabel.h
+ ../include/TextUtils.h
  /home/cullen/Code/school/pong/src/ScoreLabel.cpp
+CMakeFiles/pong.dir/src/TextUtils.cpp.o
+ ../include/GC.h
+ ../include/TextUtils.h
+ /home/cullen/Code/school/pong/src/TextUtils.cpp

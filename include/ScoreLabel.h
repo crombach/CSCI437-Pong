@@ -10,9 +10,6 @@
 
 class ScoreLabel : public sf::Text {
     uint score;
-private:
-    // Helper methods.
-    void updateOrigin();
 public:
     // Constructor
     ScoreLabel(float x, float y, sf::Font *font);

@@ -152,6 +152,9 @@
 		<Unit filename="/home/cullen/Code/school/pong/include/ScoreLabel.h">
 			<Option target="pong"/>
 		</Unit>
+		<Unit filename="/home/cullen/Code/school/pong/include/TextUtils.h">
+			<Option target="pong"/>
+		</Unit>
 		<Unit filename="/home/cullen/Code/school/pong/src/Ball.cpp">
 			<Option target="pong"/>
 			<Option target="pong_core"/>
@@ -165,6 +168,10 @@
 			<Option target="pong_core"/>
 		</Unit>
 		<Unit filename="/home/cullen/Code/school/pong/src/ScoreLabel.cpp">
+			<Option target="pong"/>
+			<Option target="pong_core"/>
+		</Unit>
+		<Unit filename="/home/cullen/Code/school/pong/src/TextUtils.cpp">
 			<Option target="pong"/>
 			<Option target="pong_core"/>
 		</Unit>
