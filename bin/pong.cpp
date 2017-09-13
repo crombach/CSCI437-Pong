@@ -12,6 +12,8 @@
 #include <unistd.h>
 #include <TextUtils.h>
 
+void placeHeaders(sf::Text *header, sf::Text *subheader);
+
 // Main function containing game loop.
 int main(int argc, char** argv) {
     // Define window constants.
@@ -48,7 +50,6 @@ int main(int argc, char** argv) {
     header.setCharacterSize(GC::HEIGHT / 16);
     header.setString(pauseHeader);
     header.setColor(sf::Color::White);
-    TextUtils::centerTextOrigin(&header);
 
     // Create a subheader Text object for use during game pauses.
     sf::Text subheader;
@@ -56,10 +57,9 @@ int main(int argc, char** argv) {
     subheader.setCharacterSize(GC::HEIGHT / 18);
     subheader.setString(pauseSubheader);
     subheader.setColor(sf::Color(60, 60, 60));
-    TextUtils::centerTextOrigin(&subheader);
 
-    // Set message and reminder position.
-    TextUtils::centerTwoTexts(&header, &subheader);
+    // Place headers.
+    placeHeaders(&header, &subheader);
 
     // Create score labels.
     ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, &wargames);
@@ -90,17 +90,20 @@ int main(int argc, char** argv) {
             }
 
             // Allow the player to quit with the escape button.
-            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape) {
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape) {
                 window.close();
             }
 
             // Control pausing with the space bar.
-            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
                 // If the game is over, mark it as not over and reset the text labels.
                 if (gameOver) {
                     gameOver = false;
+                    // Update text headers.
                     header.setString(pauseHeader);
                     subheader.setString(pauseSubheader);
+                    // Update the text origins and positioning.
+                    placeHeaders(&header, &subheader);
                 }
                 // Pause/unpause.
                 paused = !paused;
@@ -165,10 +168,8 @@ int main(int argc, char** argv) {
                 // Set subheader text.
                 subheader.setString(endGameSubheader);
 
-                // Update the text origins and positioning.
-                TextUtils::centerTextOrigin(&header);
-                TextUtils::centerTextOrigin(&subheader);
-                TextUtils::centerTwoTexts(&header, &subheader);
+                // Place headers.
+                placeHeaders(&header, &subheader);
 
                 // Reset game elements.
                 playerScore.reset();
@@ -206,4 +207,11 @@ int main(int argc, char** argv) {
 
     // Done.
     return 0;
+}
+
+// Update the origins and positioning of the headers.
+void placeHeaders(sf::Text *header, sf::Text *subheader) {
+    TextUtils::centerTextOrigin(header);
+    TextUtils::centerTextOrigin(subheader);
+    TextUtils::centerTwoTexts(header, subheader);
 }
