@@ -36,16 +36,30 @@ void Ball::setDy(float dy) {
 };
 
 void Ball::bounceX() {
-    dx = -dx;
-    // TODO: random perturbation.
+    // Set up a random number generator and distributions.
+    std::default_random_engine randomEngine(std::random_device{}());
+    std::uniform_real_distribution<float> perturbationDistribution(-5, 5);
+    float deltaDx = perturbationDistribution(randomEngine);
+    float deltaDy = perturbationDistribution(randomEngine);
+
+    // Add a small random perturbation.
+    dx = -(dx + deltaDx);
+    dy = dy + deltaDy;
 }
 
 void Ball::bounceY() {
-    dy = -dy;
-    // TODO: random perturbation.
+    // Set up a random number generator and distributions.
+    std::default_random_engine randomEngine(std::random_device{}());
+    std::uniform_real_distribution<float> perturbationDistribution(-5, 5);
+    float deltaDx = perturbationDistribution(randomEngine);
+    float deltaDy = perturbationDistribution(randomEngine);
+
+    // Add a small random perturbation.
+    dy = -(dy + deltaDy);
+    dx = dx + deltaDx;
 }
 
-void Ball::move(float deltaTime) {
+void Ball::move(float deltaTime, Paddle *playerPaddle, Paddle *aiPaddle) {
     // Calculate movement distance.
     float xDistance = deltaTime * dx;
     float yDistance = deltaTime * dy;
@@ -55,38 +69,48 @@ void Ball::move(float deltaTime) {
     float top = yPosition - getRadius();
     float bottom = yPosition + getRadius();
 
-    // Don't let the ball move off-screen.
-    // Top
-    if (yDistance <= 0) {
-        if (top + yDistance <= 0) {
-            sf::CircleShape::move(0, -top);
-            bounceY();
-        } else {
-            sf::CircleShape::move(0, yDistance);
-        }
-    }// Bottom
-    else if (yDistance > 0) {
-        if (bottom + yDistance >= GC::HEIGHT) {
-            sf::CircleShape::move(xDistance, GC::HEIGHT - bottom);
-            bounceY();
-        } else {
-            sf::CircleShape::move(xDistance, yDistance);
-        }
+    // Don't let the ball move off-screen on the top or bottom.
+    if ((yDistance <= 0) && (top + yDistance <= 0)) {
+        // Collide with top.
+        sf::CircleShape::move(0, -top);
+        bounceY();
+    } else if ((yDistance > 0) && (bottom + yDistance >= GC::HEIGHT)) {
+        // Collide with bottom.
+        sf::CircleShape::move(xDistance, GC::HEIGHT - bottom);
+        bounceY();
     }
 
-    // Move according to new speed vectors.
+    // Check for paddle hits.
+    sf::FloatRect ballRect = getGlobalBounds();
+    sf::FloatRect playerPaddleRect = playerPaddle->getGlobalBounds();
+    sf::FloatRect aiPaddleRect = aiPaddle->getGlobalBounds();
+    if (ballRect.intersects(playerPaddleRect)) {
+        // Reverse direction.
+        bounceX();
+        // Move the ball so it doesn't intersect with the paddle anymore.
+        float newX = (playerPaddle->getPosition().x) + (playerPaddle->getLocalBounds().width / 2.f) + (getLocalBounds().width/2.f) + 4.f;
+        setPosition(newX, getPosition().y);
+    }
+    else if (ballRect.intersects(aiPaddleRect)) {
+        // Reverse direction.
+        bounceX();
+        // Move the ball so it doesn't intersect with the paddle anymore.
+        float newX = (aiPaddle->getPosition().x) - (aiPaddle->getLocalBounds().width / 2.f) - (getLocalBounds().width/2.f) - 4.f;
+        setPosition(newX, getPosition().y);
+    }
+
+    // Move normally.
     sf::CircleShape::move(xDistance, yDistance);
-    // TODO: Handle bounces.
 }
 
 // Randomize ball movement. Helper method for constructors.
 void Ball::randomizeMovement() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> speedDistribution(200, 250);
+    std::uniform_real_distribution<float> speedDistribution(250, 300);
     std::uniform_int_distribution<int> directionDistribution(0, 3);
 
-    // Generate x and y speeds in [200, 240]
+    // Generate x and y speeds in [250, 300]
     float dx = speedDistribution(randomEngine);
     float dy = speedDistribution(randomEngine);
 
@@ -106,9 +130,13 @@ void Ball::randomizeMovement() {
         default: break; // Do nothing. Both stay positive.
     }
 
-    printf("dx: %lf\ndy: %lf\n", dx, dy);
-
     // Set speeds to generated numbers.
     setDx(dx);
     setDy(dy);
+}
+
+// Reset ball position to the origin and generate new directions.
+void Ball::reset() {
+    setPosition(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
+    randomizeMovement();
 }

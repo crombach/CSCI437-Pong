@@ -7,6 +7,7 @@
 
 
 #include <SFML/Graphics/CircleShape.hpp>
+#include "Paddle.h"
 
 class Ball : public sf::CircleShape {
     float dx; // x axis speed
@@ -22,7 +23,8 @@ public:
     void setDy(float dy);
     void bounceX();
     void bounceY();
-    void move(float deltaTime);
+    void move(float deltaTime, Paddle *playerPaddle, Paddle *aiPaddle);
+    void reset();
 };
 
 

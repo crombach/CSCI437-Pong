@@ -69,11 +69,26 @@ int main(int argc, char** argv) {
             // Move the AI paddle.
             aiPaddle.moveAsAI(ball.getPosition(), dTime);
 
-            // Move the ball.
-            ball.move(dTime);
+            // Move the ball. This also checks for paddle hits.
+            ball.move(dTime, &playerPaddle, &aiPaddle);
 
-            // Check for a score.
-            // Check for a paddle hit.
+            // Check for a player point.
+            if (ball.getPosition().x + ball.getRadius() >= GC::WIDTH) {
+                playerScore.increment();
+                // TODO: May want to pause the game here.
+                playerPaddle.reset(true);
+                aiPaddle.reset(false);
+                ball.reset();
+            }
+
+            // Check for an AI point.
+            if (ball.getPosition().x - ball.getRadius() <= 0) {
+                aiScore.increment();
+                // TODO: May want to pause the game here.
+                playerPaddle.reset(true);
+                aiPaddle.reset(false);
+                ball.reset();
+            }
         }
 
         // Clear screen and fill with black

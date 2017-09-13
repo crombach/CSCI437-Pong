@@ -9,6 +9,8 @@
 ../include/Ball.h
 SFML/Graphics/CircleShape.hpp
 -
+Paddle.h
+../include/Paddle.h
 
 ../include/GC.h
 

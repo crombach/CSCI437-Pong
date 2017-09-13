@@ -3,6 +3,7 @@
 
 CMakeFiles/pong_core.dir/src/Ball.cpp.o: ../include/Ball.h
 CMakeFiles/pong_core.dir/src/Ball.cpp.o: ../include/GC.h
+CMakeFiles/pong_core.dir/src/Ball.cpp.o: ../include/Paddle.h
 CMakeFiles/pong_core.dir/src/Ball.cpp.o: ../src/Ball.cpp
 
 CMakeFiles/pong_core.dir/src/Paddle.cpp.o: ../include/GC.h

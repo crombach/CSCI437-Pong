@@ -4,6 +4,7 @@
 CMakeFiles/pong_core.dir/src/Ball.cpp.o
  ../include/Ball.h
  ../include/GC.h
+ ../include/Paddle.h
  /home/cullen/Code/school/pong/src/Ball.cpp
 CMakeFiles/pong_core.dir/src/Paddle.cpp.o
  ../include/GC.h

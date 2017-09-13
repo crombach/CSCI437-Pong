@@ -16,15 +16,16 @@ Paddle::Paddle(float x, float y) {
     setPosition(x, y);
 
     // Set default speed.
-    speed = 200;
+    speed = 300;
 }
 
 // Use a custom rectangle shape for the paddle.
 Paddle::Paddle(float x, float y, sf::RectangleShape shape) : RectangleShape(shape) {
     // Set x and y position.
     setPosition(x,y);
+
     // Set default speed.
-    speed = 200;
+    speed = 300;
 }
 
 void Paddle::moveUp(float deltaTime) {
@@ -68,7 +69,17 @@ void Paddle::moveAsAI(sf::Vector2f ballPosition, float deltaTime) {
         moveDown(deltaTime);
     }
     // If the paddle's center is below the ball, move up.
-    else if (ballPosition.x < getPosition().y) {
+    else if (ballPosition.y < getPosition().y) {
         moveUp(deltaTime);
+    }
+}
+
+// Reset the paddle to starting position.
+void Paddle::reset(bool player) {
+    if (player) {
+        setPosition(GC::WIDTH / 40.f, GC::HEIGHT / 2.f);
+    }
+    else {
+        setPosition(GC::WIDTH - (GC::WIDTH / 40.f), GC::HEIGHT / 2.f);
     }
 }

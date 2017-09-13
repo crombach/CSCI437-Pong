@@ -19,6 +19,7 @@ public:
     void moveUp(float distance);
     void moveDown(float distance);
     void moveAsAI(sf::Vector2f ballPosition, float deltaTime);
+    void reset(bool player);
     // Getters and setters.
     float getSpeed();
     void setSpeed(float speed);
