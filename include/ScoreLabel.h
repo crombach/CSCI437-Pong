@@ -15,7 +15,7 @@ private:
     void updateOrigin();
 public:
     // Constructor
-    ScoreLabel(float x, float y, sf::Font font);
+    ScoreLabel(float x, float y, sf::Font *font);
     // Scoring methods.
     void increment();
     void reset();

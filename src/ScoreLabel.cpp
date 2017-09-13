@@ -5,19 +5,19 @@
 #include <GC.h>
 #include <ScoreLabel.h>
 
-ScoreLabel::ScoreLabel(float x, float y, sf::Font font) {
+ScoreLabel::ScoreLabel(float x, float y, sf::Font *font) {
     // Set initial score to zero.
     score = 0;
 
     // Set text properties.
-    setFont(font);
-    setCharacterSize(GC::HEIGHT / 20.f);
-    setColor(sf::Color(80, 80, 80));
+    setFont(*font);
+    setCharacterSize(GC::HEIGHT / 5.f);
+    setColor(sf::Color(40, 40, 40));
     setString(std::to_string(score));
 
     // Handle size and positioning
-    setPosition(x, y);
     updateOrigin();
+    setPosition(x, y);
 }
 
 void ScoreLabel::increment() {

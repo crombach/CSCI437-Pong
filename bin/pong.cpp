@@ -23,14 +23,14 @@ int main(int argc, char** argv)
 
     // Load in fonts.
     sf::Font scoreFont;
-    std::string scoreFontLocation = "resources/minecrafter.ttf";
+    std::string scoreFontLocation = "resources/wargames.ttf";
     if (!scoreFont.loadFromFile(scoreFontLocation)) {
         throw std::runtime_error("Failed to load font from " + scoreFontLocation);
     }
 
     // Create Score Labels.
-    ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, scoreFont);
-    ScoreLabel aiScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, scoreFont);
+    ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, &scoreFont);
+    ScoreLabel aiScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, &scoreFont);
 
     // Create actors.
     Paddle playerPaddle = Paddle(GC::WIDTH / 40.f, GC::HEIGHT / 2.f);
