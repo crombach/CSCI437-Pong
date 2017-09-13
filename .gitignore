@@ -1,3 +1,4 @@
 .idea
 Debug
-.git
+.git-credentials
+cmake-build-*
