@@ -25,21 +25,18 @@ Collision CollisionUtils::check(Ball *ball, Paddle *paddle) {
         // Top left corner
         if (ballX <= paddleLeft) {
             if (getDistance(ballX, ballY, paddleLeft, paddleTop) <= ballRadius) {
-                printf("TOP LEFT\n");
                 return TOP_LEFT;
             }
         }
             // Top right corner
         else if (ballX >= paddleRight) {
             if (getDistance(ballX, ballY, paddleRight, paddleTop) <= ballRadius) {
-                printf("TOP RIGHT\n");
                 return TOP_RIGHT;
             }
         }
             // Top flat area
         else {
             if (paddleTop - ballY <= ballRadius) {
-                printf("TOP\n");
                 return TOP;
             }
         }
@@ -50,21 +47,18 @@ Collision CollisionUtils::check(Ball *ball, Paddle *paddle) {
         // Bottom left corner
         if (ballX <= paddleLeft) {
             if (getDistance(ballX, ballY, paddleLeft, paddleBottom) <= ballRadius) {
-                printf("BOTTOM LEFT\n");
                 return BOTTOM_LEFT;
             }
         }
             // Bottom right corner
         else if (ballX >= paddleRight) {
             if (getDistance(ballX, ballY, paddleRight, paddleBottom) <= ballRadius) {
-                printf("BOTTOM RIGHT\n");
                 return BOTTOM_RIGHT;
             }
         }
             // Bottom flat area.
         else {
             if (ballY - paddleBottom <= ballRadius) {
-                printf("BOTTOM\n");
                 return BOTTOM;
             }
         }
@@ -76,13 +70,11 @@ Collision CollisionUtils::check(Ball *ball, Paddle *paddle) {
     // center is not below the paddle
     // center is less than or equal to one radius away from the paddle.
     if ((ballX <= paddleLeft) && (ballY >= paddleTop) && (ballY <= paddleBottom) && (paddleLeft - ballX <= ballRadius)) {
-        printf("LEFT\n");
         return LEFT;
     }
 
     // Right side collisions.
     if ((ballX >= paddleRight) && (ballY >= paddleTop) && (ballY <= paddleBottom) && (ballX - paddleRight <= ballRadius)) {
-        printf("RIGHT\n");
         return RIGHT;
     }
 

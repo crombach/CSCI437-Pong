@@ -21,15 +21,44 @@ int main(int argc, char** argv) {
     window.setVerticalSyncEnabled(true);
 
     // Load in fonts.
-    sf::Font scoreFont;
-    std::string scoreFontLocation = "resources/wargames.ttf";
-    if (!scoreFont.loadFromFile(scoreFontLocation)) {
-        throw std::runtime_error("Failed to load font from " + scoreFontLocation);
+    sf::Font wargames;
+    std::string wargamesLocation = "resources/wargames.ttf";
+    if (!wargames.loadFromFile(wargamesLocation)) {
+        throw std::runtime_error("Failed to load font from " + wargamesLocation);
+    }
+    sf::Font autobus;
+    std::string autobusLocation = "resources/autobus.ttf";
+    if (!autobus.loadFromFile(autobusLocation)) {
+        throw std::runtime_error("Failed to load font from " + autobusLocation);
     }
 
-    // Create Score Labels.
-    ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, &scoreFont);
-    ScoreLabel aiScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, &scoreFont);
+    // Store some messages to use when the game is paused.
+    std::string pauseText = "PRESS SPACE TO CONTINUE";
+    std::string reminderText = "PRESS SPACE AT ANY TIME TO PAUSE";
+
+    // Create a message Text object.
+    sf::Text message;
+    message.setFont(wargames);
+    message.setString(pauseText);
+    message.setColor(sf::Color::White);
+    sf::FloatRect messageRect = message.getLocalBounds();
+    message.setOrigin(messageRect.left + (messageRect.width / 2), messageRect.top + (messageRect.height / 2));
+
+    // Create a reminder Text object.
+    sf::Text reminder;
+    reminder.setFont(autobus);
+    reminder.setString(reminderText);
+    reminder.setColor(sf::Color(60, 60, 60));
+    sf::FloatRect reminderRect = reminder.getLocalBounds();
+    reminder.setOrigin(reminderRect.left + (reminderRect.width / 2), reminderRect.top + (reminderRect.height / 2));
+
+    // Set message and reminder position.
+    message.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) - messageRect.height);
+    reminder.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) + reminderRect.height);
+
+    // Create score labels.
+    ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, &wargames);
+    ScoreLabel aiScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, &wargames);
 
     // Create paddles.
     Paddle playerPaddle = Paddle(GC::WIDTH / 80.f, GC::HEIGHT / 2.f);
@@ -39,7 +68,7 @@ int main(int argc, char** argv) {
     Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
 
     // Game state flags.
-    bool inGame = true;
+    bool inGame = false;
 
     // Timer.
     sf::Clock clock;
@@ -47,16 +76,26 @@ int main(int argc, char** argv) {
     // Start main loop
     while(window.isOpen()) {
         // Process events
-        sf::Event Event;
-        while(window.pollEvent(Event)) {
+        sf::Event event;
+        while(window.pollEvent(event)) {
             // Exit when the window is closed.
-            if (Event.type == sf::Event::Closed) {
-            window.close();
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            // Control pausing with the space bar.
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                inGame = !inGame;
             }
         }
 
+        // Display a pause screen if we are paused.
+        if (!inGame) {
+
+        }
+
         // Handle game events if we are in-game.
-        if (inGame) {
+        else {
             // Store time passed since last frame.
             float dTime = clock.restart().asSeconds();
 
@@ -103,6 +142,11 @@ int main(int argc, char** argv) {
             window.draw(playerPaddle);
             window.draw(aiPaddle);
             window.draw(ball);
+        }
+        // If paused, draw pause messages.
+        else {
+            window.draw(message);
+            window.draw(reminder);
         }
 
         // TODO: Otherwise, draw pause screen.

@@ -11,8 +11,8 @@ ScoreLabel::ScoreLabel(float x, float y, sf::Font *font) {
 
     // Set text properties.
     setFont(*font);
-    setCharacterSize(GC::HEIGHT / 5.f);
-    setColor(sf::Color(40, 40, 40));
+    setCharacterSize(GC::HEIGHT / 5);
+    setColor(sf::Color(60, 60, 60));
     setString(std::to_string(score));
 
     // Handle size and positioning
