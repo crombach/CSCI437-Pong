@@ -7,9 +7,8 @@
 
 
 #include <SFML/Graphics/CircleShape.hpp>
-#include "Actor.h"
 
-class Ball : public Actor {
+class Ball : public sf::CircleShape {
     float dx; // x axis speed
     float dy; // y axis speed
 public:

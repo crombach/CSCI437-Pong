@@ -163,36 +163,6 @@ bin/pong.cpp.s:
 	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/bin/pong.cpp.s
 .PHONY : bin/pong.cpp.s
 
-src/Actor.o: src/Actor.cpp.o
-
-.PHONY : src/Actor.o
-
-# target to build an object file
-src/Actor.cpp.o:
-	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Actor.cpp.o
-	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/Actor.cpp.o
-.PHONY : src/Actor.cpp.o
-
-src/Actor.i: src/Actor.cpp.i
-
-.PHONY : src/Actor.i
-
-# target to preprocess a source file
-src/Actor.cpp.i:
-	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Actor.cpp.i
-	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/Actor.cpp.i
-.PHONY : src/Actor.cpp.i
-
-src/Actor.s: src/Actor.cpp.s
-
-.PHONY : src/Actor.s
-
-# target to generate assembly for a file
-src/Actor.cpp.s:
-	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Actor.cpp.s
-	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/Actor.cpp.s
-.PHONY : src/Actor.cpp.s
-
 src/Ball.o: src/Ball.cpp.o
 
 .PHONY : src/Ball.o
@@ -296,9 +266,6 @@ help:
 	@echo "... bin/pong.o"
 	@echo "... bin/pong.i"
 	@echo "... bin/pong.s"
-	@echo "... src/Actor.o"
-	@echo "... src/Actor.i"
-	@echo "... src/Actor.s"
 	@echo "... src/Ball.o"
 	@echo "... src/Ball.i"
 	@echo "... src/Ball.s"

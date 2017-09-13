@@ -8,9 +8,8 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-#include "Actor.h"
 
-class Paddle : public Actor {
+class Paddle : public sf::RectangleShape {
     float speed;
 public:
     // Constructors

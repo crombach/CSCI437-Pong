@@ -81,33 +81,9 @@ CMakeFiles/pong.dir/bin/pong.cpp.o.provides: CMakeFiles/pong.dir/bin/pong.cpp.o.
 CMakeFiles/pong.dir/bin/pong.cpp.o.provides.build: CMakeFiles/pong.dir/bin/pong.cpp.o
 
 
-CMakeFiles/pong.dir/src/Actor.cpp.o: CMakeFiles/pong.dir/flags.make
-CMakeFiles/pong.dir/src/Actor.cpp.o: ../src/Actor.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/pong.dir/src/Actor.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/pong.dir/src/Actor.cpp.o -c /home/cullen/Code/school/pong/src/Actor.cpp
-
-CMakeFiles/pong.dir/src/Actor.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/pong.dir/src/Actor.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cullen/Code/school/pong/src/Actor.cpp > CMakeFiles/pong.dir/src/Actor.cpp.i
-
-CMakeFiles/pong.dir/src/Actor.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/pong.dir/src/Actor.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cullen/Code/school/pong/src/Actor.cpp -o CMakeFiles/pong.dir/src/Actor.cpp.s
-
-CMakeFiles/pong.dir/src/Actor.cpp.o.requires:
-
-.PHONY : CMakeFiles/pong.dir/src/Actor.cpp.o.requires
-
-CMakeFiles/pong.dir/src/Actor.cpp.o.provides: CMakeFiles/pong.dir/src/Actor.cpp.o.requires
-	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/Actor.cpp.o.provides.build
-.PHONY : CMakeFiles/pong.dir/src/Actor.cpp.o.provides
-
-CMakeFiles/pong.dir/src/Actor.cpp.o.provides.build: CMakeFiles/pong.dir/src/Actor.cpp.o
-
-
 CMakeFiles/pong.dir/src/Paddle.cpp.o: CMakeFiles/pong.dir/flags.make
 CMakeFiles/pong.dir/src/Paddle.cpp.o: ../src/Paddle.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/pong.dir/src/Paddle.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/pong.dir/src/Paddle.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/pong.dir/src/Paddle.cpp.o -c /home/cullen/Code/school/pong/src/Paddle.cpp
 
 CMakeFiles/pong.dir/src/Paddle.cpp.i: cmake_force
@@ -131,7 +107,7 @@ CMakeFiles/pong.dir/src/Paddle.cpp.o.provides.build: CMakeFiles/pong.dir/src/Pad
 
 CMakeFiles/pong.dir/src/Ball.cpp.o: CMakeFiles/pong.dir/flags.make
 CMakeFiles/pong.dir/src/Ball.cpp.o: ../src/Ball.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/pong.dir/src/Ball.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/pong.dir/src/Ball.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/pong.dir/src/Ball.cpp.o -c /home/cullen/Code/school/pong/src/Ball.cpp
 
 CMakeFiles/pong.dir/src/Ball.cpp.i: cmake_force
@@ -155,7 +131,7 @@ CMakeFiles/pong.dir/src/Ball.cpp.o.provides.build: CMakeFiles/pong.dir/src/Ball.
 
 CMakeFiles/pong.dir/src/ScoreLabel.cpp.o: CMakeFiles/pong.dir/flags.make
 CMakeFiles/pong.dir/src/ScoreLabel.cpp.o: ../src/ScoreLabel.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/pong.dir/src/ScoreLabel.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/pong.dir/src/ScoreLabel.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/pong.dir/src/ScoreLabel.cpp.o -c /home/cullen/Code/school/pong/src/ScoreLabel.cpp
 
 CMakeFiles/pong.dir/src/ScoreLabel.cpp.i: cmake_force
@@ -180,7 +156,6 @@ CMakeFiles/pong.dir/src/ScoreLabel.cpp.o.provides.build: CMakeFiles/pong.dir/src
 # Object files for target pong
 pong_OBJECTS = \
 "CMakeFiles/pong.dir/bin/pong.cpp.o" \
-"CMakeFiles/pong.dir/src/Actor.cpp.o" \
 "CMakeFiles/pong.dir/src/Paddle.cpp.o" \
 "CMakeFiles/pong.dir/src/Ball.cpp.o" \
 "CMakeFiles/pong.dir/src/ScoreLabel.cpp.o"
@@ -189,7 +164,6 @@ pong_OBJECTS = \
 pong_EXTERNAL_OBJECTS =
 
 pong: CMakeFiles/pong.dir/bin/pong.cpp.o
-pong: CMakeFiles/pong.dir/src/Actor.cpp.o
 pong: CMakeFiles/pong.dir/src/Paddle.cpp.o
 pong: CMakeFiles/pong.dir/src/Ball.cpp.o
 pong: CMakeFiles/pong.dir/src/ScoreLabel.cpp.o
@@ -206,7 +180,7 @@ pong: /usr/lib/x86_64-linux-gnu/libsfml-system.so
 pong: /usr/lib/x86_64-linux-gnu/libsfml-audio.so
 pong: /usr/lib/x86_64-linux-gnu/libsfml-network.so
 pong: CMakeFiles/pong.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable pong"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable pong"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pong.dir/link.txt --verbose=$(VERBOSE)
 	/home/cullen/Programs/clion-2017.2.2/bin/cmake/bin/cmake -E copy_directory /home/cullen/Code/school/pong/resources /home/cullen/Code/school/pong/cmake-build-debug/resources
 
@@ -216,7 +190,6 @@ CMakeFiles/pong.dir/build: pong
 .PHONY : CMakeFiles/pong.dir/build
 
 CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/bin/pong.cpp.o.requires
-CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/src/Actor.cpp.o.requires
 CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/src/Paddle.cpp.o.requires
 CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/src/Ball.cpp.o.requires
 CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/src/ScoreLabel.cpp.o.requires

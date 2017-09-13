@@ -3,7 +3,7 @@
 //
 
 #include <GC.h>
-#include "ScoreLabel.h"
+#include <ScoreLabel.h>
 
 ScoreLabel::ScoreLabel(float x, float y, sf::Font font) {
     // Set initial score to zero.
@@ -13,7 +13,7 @@ ScoreLabel::ScoreLabel(float x, float y, sf::Font font) {
     setFont(font);
     setCharacterSize(GC::HEIGHT / 20.f);
     setColor(sf::Color(80, 80, 80));
-    setString(score);
+    setString(std::to_string(score));
 
     // Handle size and positioning
     setPosition(x, y);
@@ -22,13 +22,13 @@ ScoreLabel::ScoreLabel(float x, float y, sf::Font font) {
 
 void ScoreLabel::increment() {
     score++;
-    setString(score);
+    setString(std::to_string(score));
     updateOrigin();
 }
 
 void ScoreLabel::reset() {
     score = 0;
-    setString(score);
+    setString(std::to_string(score));
     updateOrigin();
 }
 

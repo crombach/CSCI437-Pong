@@ -5,7 +5,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/cullen/Code/school/pong/bin/pong.cpp" "/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles/pong.dir/bin/pong.cpp.o"
-  "/home/cullen/Code/school/pong/src/Actor.cpp" "/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles/pong.dir/src/Actor.cpp.o"
   "/home/cullen/Code/school/pong/src/Ball.cpp" "/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles/pong.dir/src/Ball.cpp.o"
   "/home/cullen/Code/school/pong/src/Paddle.cpp" "/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles/pong.dir/src/Paddle.cpp.o"
   "/home/cullen/Code/school/pong/src/ScoreLabel.cpp" "/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles/pong.dir/src/ScoreLabel.cpp.o"

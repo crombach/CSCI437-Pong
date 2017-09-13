@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 
     // Load in fonts.
     sf::Font scoreFont;
-    std::string scoreFontLocation = "resources/wargames.ttf";
+    std::string scoreFontLocation = "resources/minecrafter.ttf";
     if (!scoreFont.loadFromFile(scoreFontLocation)) {
         throw std::runtime_error("Failed to load font from " + scoreFontLocation);
     }
@@ -33,8 +33,8 @@ int main(int argc, char** argv)
     ScoreLabel aiScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, scoreFont);
 
     // Create actors.
-    Paddle leftPaddle = Paddle(GC::WIDTH / 20.f, GC::HEIGHT / 2.f);
-    Paddle rightPaddle = Paddle(GC::WIDTH / 40.f, GC::HEIGHT / 2.f);
+    Paddle playerPaddle = Paddle(GC::WIDTH / 40.f, GC::HEIGHT / 2.f);
+    Paddle aiPaddle = Paddle(GC::WIDTH - (GC::WIDTH / 40.f), GC::HEIGHT / 2.f);
     Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
 
     // Start main loop
@@ -52,7 +52,12 @@ int main(int argc, char** argv)
         // Clear screen and fill with black
         window.clear(sf::Color::Black);
 
-        // Draw actors and labels here.
+        // Draw actors and labels.
+        window.draw(playerScore);
+        window.draw(aiScore);
+        window.draw(playerPaddle);
+        window.draw(aiPaddle);
+        window.draw(ball);
 
         // Display rendered image.
         window.display();
