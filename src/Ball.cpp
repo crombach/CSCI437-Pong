@@ -4,12 +4,13 @@
 
 #include <Ball.h>
 #include <GC.h>
+#include <CollisionUtils.h>
 
 // Build a default ball.
 // Default balls are white and have a radius of 1/60th the screen's width.
 Ball::Ball(float x, float y) {
     // Build default shape.
-    setRadius(GC::WIDTH / 60.f);
+    setRadius(GC::WIDTH / 80.f);
     setFillColor(sf::Color::White);
     setOrigin(getRadius(), getRadius());
     setPosition(x, y);
@@ -38,7 +39,7 @@ void Ball::setDy(float dy) {
 void Ball::bounceX() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-5, 5);
+    std::uniform_real_distribution<float> perturbationDistribution(-10, 10);
     float deltaDx = perturbationDistribution(randomEngine);
     float deltaDy = perturbationDistribution(randomEngine);
 
@@ -50,7 +51,7 @@ void Ball::bounceX() {
 void Ball::bounceY() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-5, 5);
+    std::uniform_real_distribution<float> perturbationDistribution(-10, 10);
     float deltaDx = perturbationDistribution(randomEngine);
     float deltaDy = perturbationDistribution(randomEngine);
 
@@ -59,58 +60,98 @@ void Ball::bounceY() {
     dx = dx + deltaDx;
 }
 
-void Ball::move(float deltaTime, Paddle *playerPaddle, Paddle *aiPaddle) {
+void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
     // Calculate movement distance.
     float xDistance = deltaTime * dx;
     float yDistance = deltaTime * dy;
 
-    // Store current position.
-    float yPosition = getPosition().y;
-    float top = yPosition - getRadius();
-    float bottom = yPosition + getRadius();
-
-    // Don't let the ball move off-screen on the top or bottom.
-    if ((yDistance <= 0) && (top + yDistance <= 0)) {
-        // Collide with top.
-        sf::CircleShape::move(0, -top);
-        bounceY();
-    } else if ((yDistance > 0) && (bottom + yDistance >= GC::HEIGHT)) {
-        // Collide with bottom.
-        sf::CircleShape::move(xDistance, GC::HEIGHT - bottom);
-        bounceY();
-    }
+    // Move.
+    sf::CircleShape::move(xDistance, yDistance);
 
     // Check for paddle hits.
-    sf::FloatRect ballRect = getGlobalBounds();
-    sf::FloatRect playerPaddleRect = playerPaddle->getGlobalBounds();
-    sf::FloatRect aiPaddleRect = aiPaddle->getGlobalBounds();
-    if (ballRect.intersects(playerPaddleRect)) {
-        // Reverse direction.
-        bounceX();
-        // Move the ball so it doesn't intersect with the paddle anymore.
-        float newX = (playerPaddle->getPosition().x) + (playerPaddle->getLocalBounds().width / 2.f) + (getLocalBounds().width/2.f) + 4.f;
-        setPosition(newX, getPosition().y);
+    // Left paddle.
+    switch (CollisionUtils::check(this, leftPaddle)) {
+        case RIGHT : {
+            bounceX();
+            float newX = leftPaddle->getGlobalBounds().left + leftPaddle->getGlobalBounds().width + getRadius() + .1f;
+            setPosition(newX, getPosition().y);
+            break;
+        }
+        case TOP : {
+            bounceY();
+            float newY = leftPaddle->getGlobalBounds().top - getRadius() - .1f;
+            setPosition(getPosition().x, newY);
+            break;
+        }
+        case TOP_RIGHT : {
+            bounceX();
+            break;
+        }
+        case BOTTOM : {
+            bounceY();
+            float newY = leftPaddle->getGlobalBounds().top + leftPaddle->getGlobalBounds().height + getRadius() + .1f;
+            setPosition(getPosition().x, newY);
+            break;
+        }
+        case BOTTOM_RIGHT : {
+            bounceX();
+            break;
+        }
+        default : break;
     }
-    else if (ballRect.intersects(aiPaddleRect)) {
-        // Reverse direction.
-        bounceX();
-        // Move the ball so it doesn't intersect with the paddle anymore.
-        float newX = (aiPaddle->getPosition().x) - (aiPaddle->getLocalBounds().width / 2.f) - (getLocalBounds().width/2.f) - 4.f;
-        setPosition(newX, getPosition().y);
+    // Right paddle.
+    switch (CollisionUtils::check(this, rightPaddle)) {
+        case LEFT : {
+            bounceX();
+            float newX = rightPaddle->getGlobalBounds().left - getRadius() - .1f;
+            setPosition(newX, getPosition().y);
+            break;
+        }
+        case TOP : {
+            bounceY();
+            float newY = rightPaddle->getGlobalBounds().top - getRadius() - .1f;
+            setPosition(getPosition().x, newY);
+            break;
+        }
+        case TOP_LEFT : {
+            bounceX();
+            bounceY();
+            break;
+        }
+        case BOTTOM : {
+            bounceY();
+            float newY = rightPaddle->getGlobalBounds().top + rightPaddle->getGlobalBounds().height + getRadius() + .1f;
+            setPosition(getPosition().x, newY);
+            break;
+        }
+        case BOTTOM_LEFT : {
+            bounceX();
+            bounceY();
+            break;
+        }
+        default : break;
     }
 
-    // Move normally.
-    sf::CircleShape::move(xDistance, yDistance);
+    // Don't let the ball move off-screen on the top or bottom.
+    if ((getPosition().y - getRadius()) <= 0) {
+        // Collide with top.
+        setPosition(getPosition().x, getRadius() + .1f);
+        bounceY();
+    } else if (getPosition().y + getRadius() >= GC::HEIGHT) {
+        // Collide with bottom.
+        setPosition(getPosition().x, GC::HEIGHT - getRadius() - .1f);
+        bounceY();
+    }
 }
 
 // Randomize ball movement. Helper method for constructors.
 void Ball::randomizeMovement() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> speedDistribution(250, 300);
+    std::uniform_real_distribution<float> speedDistribution(300, 350);
     std::uniform_int_distribution<int> directionDistribution(0, 3);
 
-    // Generate x and y speeds in [250, 300]
+    // Generate x and y speeds
     float dx = speedDistribution(randomEngine);
     float dy = speedDistribution(randomEngine);
 

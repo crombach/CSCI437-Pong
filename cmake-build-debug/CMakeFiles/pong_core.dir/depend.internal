@@ -3,9 +3,15 @@
 
 CMakeFiles/pong_core.dir/src/Ball.cpp.o
  ../include/Ball.h
+ ../include/CollisionUtils.h
  ../include/GC.h
  ../include/Paddle.h
  /home/cullen/Code/school/pong/src/Ball.cpp
+CMakeFiles/pong_core.dir/src/CollisionUtils.cpp.o
+ ../include/Ball.h
+ ../include/CollisionUtils.h
+ ../include/Paddle.h
+ /home/cullen/Code/school/pong/src/CollisionUtils.cpp
 CMakeFiles/pong_core.dir/src/Paddle.cpp.o
  ../include/GC.h
  ../include/Paddle.h

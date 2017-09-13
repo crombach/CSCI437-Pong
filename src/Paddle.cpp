@@ -75,11 +75,11 @@ void Paddle::moveAsAI(sf::Vector2f ballPosition, float deltaTime) {
 }
 
 // Reset the paddle to starting position.
-void Paddle::reset(bool player) {
-    if (player) {
-        setPosition(GC::WIDTH / 40.f, GC::HEIGHT / 2.f);
+void Paddle::reset(bool left) {
+    if (left) {
+        setPosition(GC::WIDTH / 80.f, GC::HEIGHT / 2.f);
     }
     else {
-        setPosition(GC::WIDTH - (GC::WIDTH / 40.f), GC::HEIGHT / 2.f);
+        setPosition(GC::WIDTH - (GC::WIDTH / 80.f), GC::HEIGHT / 2.f);
     }
 }

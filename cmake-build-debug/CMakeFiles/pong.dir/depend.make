@@ -8,9 +8,15 @@ CMakeFiles/pong.dir/bin/pong.cpp.o: ../include/ScoreLabel.h
 CMakeFiles/pong.dir/bin/pong.cpp.o: ../bin/pong.cpp
 
 CMakeFiles/pong.dir/src/Ball.cpp.o: ../include/Ball.h
+CMakeFiles/pong.dir/src/Ball.cpp.o: ../include/CollisionUtils.h
 CMakeFiles/pong.dir/src/Ball.cpp.o: ../include/GC.h
 CMakeFiles/pong.dir/src/Ball.cpp.o: ../include/Paddle.h
 CMakeFiles/pong.dir/src/Ball.cpp.o: ../src/Ball.cpp
+
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o: ../include/Ball.h
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o: ../include/CollisionUtils.h
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o: ../include/Paddle.h
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o: ../src/CollisionUtils.cpp
 
 CMakeFiles/pong.dir/src/Paddle.cpp.o: ../include/GC.h
 CMakeFiles/pong.dir/src/Paddle.cpp.o: ../include/Paddle.h

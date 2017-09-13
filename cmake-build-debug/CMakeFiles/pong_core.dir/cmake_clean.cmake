@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/pong_core.dir/src/Ball.cpp.o"
+  "CMakeFiles/pong_core.dir/src/CollisionUtils.cpp.o"
   "CMakeFiles/pong_core.dir/src/Paddle.cpp.o"
   "CMakeFiles/pong_core.dir/src/ScoreLabel.cpp.o"
   "libpong_core.pdb"

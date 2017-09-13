@@ -12,6 +12,10 @@ SFML/Graphics/CircleShape.hpp
 Paddle.h
 ../include/Paddle.h
 
+../include/CollisionUtils.h
+Ball.h
+../include/Ball.h
+
 ../include/GC.h
 
 ../include/Paddle.h
@@ -42,6 +46,12 @@ Ball.h
 Ball.h
 -
 GC.h
+-
+CollisionUtils.h
+-
+
+/home/cullen/Code/school/pong/src/CollisionUtils.cpp
+CollisionUtils.h
 -
 
 /home/cullen/Code/school/pong/src/Paddle.cpp

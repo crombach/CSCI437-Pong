@@ -140,6 +140,9 @@
 		<Unit filename="/home/cullen/Code/school/pong/include/Ball.h">
 			<Option target="pong"/>
 		</Unit>
+		<Unit filename="/home/cullen/Code/school/pong/include/CollisionUtils.h">
+			<Option target="pong"/>
+		</Unit>
 		<Unit filename="/home/cullen/Code/school/pong/include/GC.h">
 			<Option target="pong"/>
 		</Unit>
@@ -150,6 +153,10 @@
 			<Option target="pong"/>
 		</Unit>
 		<Unit filename="/home/cullen/Code/school/pong/src/Ball.cpp">
+			<Option target="pong"/>
+			<Option target="pong_core"/>
+		</Unit>
+		<Unit filename="/home/cullen/Code/school/pong/src/CollisionUtils.cpp">
 			<Option target="pong"/>
 			<Option target="pong_core"/>
 		</Unit>

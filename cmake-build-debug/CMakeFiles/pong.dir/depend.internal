@@ -9,9 +9,15 @@ CMakeFiles/pong.dir/bin/pong.cpp.o
  /home/cullen/Code/school/pong/bin/pong.cpp
 CMakeFiles/pong.dir/src/Ball.cpp.o
  ../include/Ball.h
+ ../include/CollisionUtils.h
  ../include/GC.h
  ../include/Paddle.h
  /home/cullen/Code/school/pong/src/Ball.cpp
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o
+ ../include/Ball.h
+ ../include/CollisionUtils.h
+ ../include/Paddle.h
+ /home/cullen/Code/school/pong/src/CollisionUtils.cpp
 CMakeFiles/pong.dir/src/Paddle.cpp.o
  ../include/GC.h
  ../include/Paddle.h

@@ -193,6 +193,36 @@ src/Ball.cpp.s:
 	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/Ball.cpp.s
 .PHONY : src/Ball.cpp.s
 
+src/CollisionUtils.o: src/CollisionUtils.cpp.o
+
+.PHONY : src/CollisionUtils.o
+
+# target to build an object file
+src/CollisionUtils.cpp.o:
+	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/CollisionUtils.cpp.o
+	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/CollisionUtils.cpp.o
+.PHONY : src/CollisionUtils.cpp.o
+
+src/CollisionUtils.i: src/CollisionUtils.cpp.i
+
+.PHONY : src/CollisionUtils.i
+
+# target to preprocess a source file
+src/CollisionUtils.cpp.i:
+	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/CollisionUtils.cpp.i
+	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/CollisionUtils.cpp.i
+.PHONY : src/CollisionUtils.cpp.i
+
+src/CollisionUtils.s: src/CollisionUtils.cpp.s
+
+.PHONY : src/CollisionUtils.s
+
+# target to generate assembly for a file
+src/CollisionUtils.cpp.s:
+	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/CollisionUtils.cpp.s
+	$(MAKE) -f CMakeFiles/pong_core.dir/build.make CMakeFiles/pong_core.dir/src/CollisionUtils.cpp.s
+.PHONY : src/CollisionUtils.cpp.s
+
 src/Paddle.o: src/Paddle.cpp.o
 
 .PHONY : src/Paddle.o
@@ -269,6 +299,9 @@ help:
 	@echo "... src/Ball.o"
 	@echo "... src/Ball.i"
 	@echo "... src/Ball.s"
+	@echo "... src/CollisionUtils.o"
+	@echo "... src/CollisionUtils.i"
+	@echo "... src/CollisionUtils.s"
 	@echo "... src/Paddle.o"
 	@echo "... src/Paddle.i"
 	@echo "... src/Paddle.s"

@@ -153,12 +153,37 @@ CMakeFiles/pong.dir/src/ScoreLabel.cpp.o.provides: CMakeFiles/pong.dir/src/Score
 CMakeFiles/pong.dir/src/ScoreLabel.cpp.o.provides.build: CMakeFiles/pong.dir/src/ScoreLabel.cpp.o
 
 
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o: CMakeFiles/pong.dir/flags.make
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o: ../src/CollisionUtils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/pong.dir/src/CollisionUtils.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/pong.dir/src/CollisionUtils.cpp.o -c /home/cullen/Code/school/pong/src/CollisionUtils.cpp
+
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/pong.dir/src/CollisionUtils.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/cullen/Code/school/pong/src/CollisionUtils.cpp > CMakeFiles/pong.dir/src/CollisionUtils.cpp.i
+
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/pong.dir/src/CollisionUtils.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/cullen/Code/school/pong/src/CollisionUtils.cpp -o CMakeFiles/pong.dir/src/CollisionUtils.cpp.s
+
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o.requires:
+
+.PHONY : CMakeFiles/pong.dir/src/CollisionUtils.cpp.o.requires
+
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o.provides: CMakeFiles/pong.dir/src/CollisionUtils.cpp.o.requires
+	$(MAKE) -f CMakeFiles/pong.dir/build.make CMakeFiles/pong.dir/src/CollisionUtils.cpp.o.provides.build
+.PHONY : CMakeFiles/pong.dir/src/CollisionUtils.cpp.o.provides
+
+CMakeFiles/pong.dir/src/CollisionUtils.cpp.o.provides.build: CMakeFiles/pong.dir/src/CollisionUtils.cpp.o
+
+
 # Object files for target pong
 pong_OBJECTS = \
 "CMakeFiles/pong.dir/bin/pong.cpp.o" \
 "CMakeFiles/pong.dir/src/Paddle.cpp.o" \
 "CMakeFiles/pong.dir/src/Ball.cpp.o" \
-"CMakeFiles/pong.dir/src/ScoreLabel.cpp.o"
+"CMakeFiles/pong.dir/src/ScoreLabel.cpp.o" \
+"CMakeFiles/pong.dir/src/CollisionUtils.cpp.o"
 
 # External object files for target pong
 pong_EXTERNAL_OBJECTS =
@@ -167,6 +192,7 @@ pong: CMakeFiles/pong.dir/bin/pong.cpp.o
 pong: CMakeFiles/pong.dir/src/Paddle.cpp.o
 pong: CMakeFiles/pong.dir/src/Ball.cpp.o
 pong: CMakeFiles/pong.dir/src/ScoreLabel.cpp.o
+pong: CMakeFiles/pong.dir/src/CollisionUtils.cpp.o
 pong: CMakeFiles/pong.dir/build.make
 pong: /usr/lib/x86_64-linux-gnu/libsfml-graphics.so
 pong: /usr/lib/x86_64-linux-gnu/libsfml-window.so
@@ -180,7 +206,7 @@ pong: /usr/lib/x86_64-linux-gnu/libsfml-system.so
 pong: /usr/lib/x86_64-linux-gnu/libsfml-audio.so
 pong: /usr/lib/x86_64-linux-gnu/libsfml-network.so
 pong: CMakeFiles/pong.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable pong"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/cullen/Code/school/pong/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable pong"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pong.dir/link.txt --verbose=$(VERBOSE)
 	/home/cullen/Programs/clion-2017.2.2/bin/cmake/bin/cmake -E copy_directory /home/cullen/Code/school/pong/resources /home/cullen/Code/school/pong/cmake-build-debug/resources
 
@@ -193,6 +219,7 @@ CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/bin/pong.cpp.o.requires
 CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/src/Paddle.cpp.o.requires
 CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/src/Ball.cpp.o.requires
 CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/src/ScoreLabel.cpp.o.requires
+CMakeFiles/pong.dir/requires: CMakeFiles/pong.dir/src/CollisionUtils.cpp.o.requires
 
 .PHONY : CMakeFiles/pong.dir/requires
 

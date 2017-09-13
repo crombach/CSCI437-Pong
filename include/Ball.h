@@ -23,7 +23,7 @@ public:
     void setDy(float dy);
     void bounceX();
     void bounceY();
-    void move(float deltaTime, Paddle *playerPaddle, Paddle *aiPaddle);
+    void move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle);
     void reset();
 };
 
