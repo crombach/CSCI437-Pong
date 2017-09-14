@@ -77,13 +77,28 @@ float Paddle::getSpeed() {
 void Paddle::moveAsAI(float deltaTime, float ballDx, float ballDy, sf::Vector2f ballPosition, bool recalculate) {
     // If recalculate flag is set, need to recalculate direction to move.
     if (recalculate) {
-        // If the paddle's center is above the ball, move down.
-        if (ballPosition.y > getPosition().y) {
+        // If the ball is above the paddle, move up.
+        if (ballPosition.y < (getPosition().y - (getLocalBounds().height / 2.f))) {
+            direction = UP;
+        }
+        // If the ball is below the paddle, move down.
+        else if (ballPosition.y > (getPosition().y + (getLocalBounds().height / 2.f))) {
             direction = DOWN;
         }
-        // If the paddle's center is below the ball, move up.
-        else if (ballPosition.y < getPosition().y) {
-            direction = UP;
+        // If the ball is across from the paddle...
+        else {
+            // If the ball is moving up at at least half the paddle's speed, move up.
+            if (ballDy < 0 && (ballDy < -(speed / 2.f))) {
+                direction = UP;
+            }
+            // If the ball is moving down at at least half the paddle's speed, move down.
+            else if (ballDy > 0 && (ballDy > (speed / 2.f))) {
+                direction = DOWN;
+            }
+            // Otherwise, don't move.
+            else {
+                direction = STATIC;
+            }
         }
     }
 

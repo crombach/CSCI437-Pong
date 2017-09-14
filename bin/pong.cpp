@@ -167,7 +167,7 @@ int main(int argc, char** argv) {
             }
             else {
                 secondsSinceAIRecalculated += dTime;
-                if (secondsSinceAIRecalculated >= 0.1f) {
+                if (secondsSinceAIRecalculated >= 0.15f) {
                     doRecalculateAI = true;
                 }
             }
