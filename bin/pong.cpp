@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     subheader.setFont(autobus);
     subheader.setCharacterSize(GC::HEIGHT / 18);
     subheader.setString(pauseSubheader);
-    subheader.setColor(sf::Color(60, 60, 60));
+    subheader.setColor(sf::Color(80, 80, 80));
 
     // Place headers.
     placeHeaders(&header, &subheader);
@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
                 paused = !paused;
                 // Give the player a small amount of time to prepare.
                 if (!paused) {
-                    usleep(50000);
+                    clock.restart();
                 }
             }
 
@@ -148,6 +148,8 @@ int main(int argc, char** argv) {
 
             // Check for an AI point.
             if (ball.getPosition().x - ball.getRadius() <= 0) {
+                //printf("Ball Position X: %lf \n", ball.getPosition().x);
+                //printf("Ball Radius: %lf \n", ball.getRadius());
                 aiScore.increment();
                 playerPaddle.reset(true);
                 aiPaddle.reset(false);

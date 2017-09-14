@@ -16,7 +16,7 @@ Paddle::Paddle(float x, float y) {
     setPosition(x, y);
 
     // Set default speed.
-    speed = 340;
+    speed = 350;
 }
 
 // Use a custom rectangle shape for the paddle.
@@ -25,7 +25,7 @@ Paddle::Paddle(float x, float y, sf::RectangleShape shape) : RectangleShape(shap
     setPosition(x,y);
 
     // Set default speed.
-    speed = 340;
+    speed = 350;
 }
 
 void Paddle::moveUp(float deltaTime) {

@@ -39,21 +39,31 @@ void Ball::setDy(float dy) {
 void Ball::bounceX() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-20, 20);
+    std::uniform_real_distribution<float> perturbationDistribution(-5, 25);
     float deltaDx = perturbationDistribution(randomEngine);
 
     // Add a small random perturbation.
-    dx = -(dx + deltaDx);
+    if (dx < 0) {
+        dx = -(dx - deltaDx);
+    }
+    else {
+        dx = -(dx + deltaDx);
+    }
 }
 
 void Ball::bounceY() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-20, 20);
+    std::uniform_real_distribution<float> perturbationDistribution(-5, 25);
     float deltaDy = perturbationDistribution(randomEngine);
 
     // Add a small random perturbation.
-    dy = -(dy + deltaDy);
+    if (dy < 0) {
+        dy = -(dy - deltaDy);
+    }
+    else {
+        dy = -(dy + deltaDy);
+    }
 }
 
 void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
@@ -142,7 +152,7 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
 void Ball::randomizeMovement() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> speedDistribution(360, 400);
+    std::uniform_real_distribution<float> speedDistribution(300, 350);
     std::uniform_int_distribution<int> directionDistribution(0, 3);
 
     // Generate x and y speeds
