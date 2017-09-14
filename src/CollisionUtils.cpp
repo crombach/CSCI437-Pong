@@ -65,10 +65,6 @@ Collision CollisionUtils::check(Ball *ball, Paddle *paddle) {
     }
 
     // Left side collisions.
-    // center is left of the paddle.
-    // center is not above the top of the paddle
-    // center is not below the paddle
-    // center is less than or equal to one radius away from the paddle.
     if ((ballX <= paddleLeft) && (ballY >= paddleTop) && (ballY <= paddleBottom) && (paddleLeft - ballX <= ballRadius)) {
         return LEFT;
     }

@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 class ScoreLabel : public sf::Text {
+private:
     uint score;
 public:
     // Constructor

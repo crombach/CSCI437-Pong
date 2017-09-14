@@ -28,19 +28,27 @@ Ball::Ball(float x, float y, sf::CircleShape shape) : CircleShape(shape) {
     randomizeMovement();
 }
 
+float Ball::getDx() {
+    return dx;
+}
+
 void Ball::setDx(float dx) {
     this->dx = dx;
-};
+}
+
+float Ball::getDy() {
+    return dy;
+}
 
 void Ball::setDy(float dy) {
     this->dy = dy;
-};
+}
 
 void Ball::bounceX() {
     // Set up a random number generator and distributions.
     // The ball should speed up over time.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-5, 40);
+    std::uniform_real_distribution<float> perturbationDistribution(-5, 20);
     float deltaDx = perturbationDistribution(randomEngine);
 
     // Add a small random perturbation.
@@ -56,7 +64,7 @@ void Ball::bounceY() {
     // Set up a random number generator and distributions.
     // The ball should speed up over time.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-5, 40);
+    std::uniform_real_distribution<float> perturbationDistribution(-5, 20);
     float deltaDy = perturbationDistribution(randomEngine);
 
     // Add a small random perturbation.
@@ -83,26 +91,31 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
             bounceX();
             float newX = leftPaddle->getGlobalBounds().left + leftPaddle->getGlobalBounds().width + getRadius() + .1f;
             setPosition(newX, getPosition().y);
+            paddleHit(leftPaddle);
             break;
         }
         case TOP : {
             bounceY();
             float newY = leftPaddle->getGlobalBounds().top - getRadius() - .1f;
             setPosition(getPosition().x, newY);
+            paddleHit(leftPaddle);
             break;
         }
         case TOP_RIGHT : {
             bounceX();
+            paddleHit(leftPaddle);
             break;
         }
         case BOTTOM : {
             bounceY();
             float newY = leftPaddle->getGlobalBounds().top + leftPaddle->getGlobalBounds().height + getRadius() + .1f;
             setPosition(getPosition().x, newY);
+            paddleHit(leftPaddle);
             break;
         }
         case BOTTOM_RIGHT : {
             bounceX();
+            paddleHit(leftPaddle);
             break;
         }
         default : break;
@@ -113,26 +126,31 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
             bounceX();
             float newX = rightPaddle->getGlobalBounds().left - getRadius() - .1f;
             setPosition(newX, getPosition().y);
+            paddleHit(rightPaddle);
             break;
         }
         case TOP : {
             bounceY();
             float newY = rightPaddle->getGlobalBounds().top - getRadius() - .1f;
             setPosition(getPosition().x, newY);
+            paddleHit(rightPaddle);
             break;
         }
         case TOP_LEFT : {
             bounceX();
+            paddleHit(rightPaddle);
             break;
         }
         case BOTTOM : {
             bounceY();
             float newY = rightPaddle->getGlobalBounds().top + rightPaddle->getGlobalBounds().height + getRadius() + .1f;
             setPosition(getPosition().x, newY);
+            paddleHit(rightPaddle);
             break;
         }
         case BOTTOM_LEFT : {
             bounceX();
+            paddleHit(rightPaddle);
             break;
         }
         default : break;
@@ -154,7 +172,7 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
 void Ball::randomizeMovement() {
     // Set up a random number generator and distributions.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> speedDistribution(300, 350);
+    std::uniform_real_distribution<float> speedDistribution((GC::WIDTH / 2.5f), ((GC::WIDTH / 2.5f) + (GC::WIDTH / 16.f)));
     std::uniform_int_distribution<int> directionDistribution(0, 3);
 
     // Generate x and y speeds
@@ -186,4 +204,53 @@ void Ball::randomizeMovement() {
 void Ball::reset() {
     setPosition(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
     randomizeMovement();
+}
+
+/*
+ * When the ball hits a paddle, take the speed and direction of the paddle into account
+ * when the ball bounces. That way, the player has some control over the ball's direction.
+ * The paddle speed has a set factor on the y-speed of the ball.
+ * Also, the closer the ball hits to the end of the paddle the more its x-speed will increase.
+ * Hitting the middle half of the paddle will slow the ball's x-speed.
+ */
+void Ball::paddleHit(Paddle *paddle) {
+    // Set speed factors.
+    float verticalSpeedFactor = 0.2f;
+    float horizontalSpeedFactor = 0.25f;
+
+    // If the ball and paddle are moving the same direction, speed the ball up.
+    if ((dy > 0) && (paddle->getDirection() == DOWN)) {
+        dy += paddle->getSpeed() * verticalSpeedFactor;
+    }
+    else if ((dy < 0) && (paddle->getDirection() == UP)) {
+        dy -= paddle->getSpeed() * verticalSpeedFactor;
+    }
+    // If the ball and paddle are moving opposite directions, speed the ball down.
+    else if ((dy > 0) && (paddle->getDirection() == UP)) {
+        dy -= paddle->getSpeed() * verticalSpeedFactor;
+    }
+    else if ((dy < 0) && (paddle->getDirection() == DOWN)) {
+        dy += paddle->getSpeed() * verticalSpeedFactor;
+    }
+
+    // Check how far the ball hit from the center of the ball.
+    float distanceFromCenter = std::abs(getPosition().y - paddle->getPosition().y);
+    // Hitting the middle half of the paddle slows the ball down.
+    if (distanceFromCenter < (paddle->getLocalBounds().height / 4.f)) {
+        if (dx > 0) {
+            dx -= (paddle->getLocalBounds().height - distanceFromCenter) * horizontalSpeedFactor;
+        }
+        else {
+            dx += (paddle->getLocalBounds().height - distanceFromCenter) * horizontalSpeedFactor;
+        }
+    }
+    // Hitting the outer two quarters of the paddle speeds the ball up.
+    else {
+        if (dx > 0) {
+            dx += distanceFromCenter * horizontalSpeedFactor;
+        }
+        else {
+            dx -= distanceFromCenter * horizontalSpeedFactor;
+        }
+    }
 }

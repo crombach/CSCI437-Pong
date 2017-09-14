@@ -72,14 +72,16 @@ int main(int argc, char** argv) {
     Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
 
     // Game state flags.
-    bool paused = true;
+    bool isPaused = true;
     bool justStarted = true;
-    bool gameOver = false;
+    bool isGameOver = false;
+    bool doRecalculateAI = true;
 
     // Timer things.
     sf::Clock clock;
     float dTime;
     float secondsSinceStarted = 0.f;
+    float secondsSinceAIRecalculated = 0.f;
 
     // Start main loop
     while(window.isOpen()) {
@@ -99,8 +101,8 @@ int main(int argc, char** argv) {
             // Control pausing with the space bar.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
                 // If the game is over, mark it as not over and reset the text labels.
-                if (gameOver) {
-                    gameOver = false;
+                if (isGameOver) {
+                    isGameOver = false;
                     // Update text headers.
                     header.setString(pauseHeader);
                     subheader.setString(pauseSubheader);
@@ -108,10 +110,10 @@ int main(int argc, char** argv) {
                     placeHeaders(&header, &subheader);
                 }
                 // Pause/unpause.
-                paused = !paused;
+                isPaused = !isPaused;
                 // If unpausing, restart the clock to avoid unwanted ball/paddle movement.
                 // Also, mark that the game has just started to give the player some breathing room.
-                if (!paused) {
+                if (!isPaused) {
                     clock.restart();
                     justStarted = true;
                 }
@@ -119,12 +121,12 @@ int main(int argc, char** argv) {
 
             // Pause if the game loses focus.
             if (event.type == sf::Event::LostFocus) {
-                paused = true;
+                isPaused = true;
             }
         }
 
         // Handle game events if we are in-game.
-        if (!paused) {
+        if (!isPaused) {
             /*
              * Store time passed since last frame. If the game just started or just unpaused,
              * give the player a brief time before the ball starts moving. This is done by preventing
@@ -133,8 +135,8 @@ int main(int argc, char** argv) {
             if (justStarted) {
                 secondsSinceStarted += clock.restart().asSeconds();
                 dTime = 0.f;
-                // Give the play 0.6 seconds to get ready.
-                if (secondsSinceStarted >= 0.6f) {
+                // Give the player 0.75 seconds to get ready.
+                if (secondsSinceStarted >= 0.75f) {
                     justStarted = false;
                     secondsSinceStarted = 0.f;
                 }
@@ -150,12 +152,25 @@ int main(int argc, char** argv) {
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                 playerPaddle.moveDown(dTime);
             }
-
-            // Move the AI paddle.
-            aiPaddle.moveAsAI(ball.getPosition(), dTime);
+            else {
+                playerPaddle.noMove();
+            }
 
             // Move the ball. This also checks for collisions.
             ball.move(dTime, &playerPaddle, &aiPaddle);
+
+            // Move the AI paddle. Recalculate direction once every .1 seconds.
+            aiPaddle.moveAsAI(dTime, ball.getDx(), ball.getDy(), ball.getPosition(), doRecalculateAI);
+            if (doRecalculateAI) {
+                secondsSinceAIRecalculated = 0.f;
+                doRecalculateAI = false;
+            }
+            else {
+                secondsSinceAIRecalculated += dTime;
+                if (secondsSinceAIRecalculated >= 0.1f) {
+                    doRecalculateAI = true;
+                }
+            }
 
             // Check for a player point.
             if (ball.getPosition().x + ball.getRadius() >= GC::WIDTH) {
@@ -210,8 +225,8 @@ int main(int argc, char** argv) {
                 ball.reset();
 
                 // Pause the game on the end screen.
-                paused = true;
-                gameOver = true;
+                isPaused = true;
+                isGameOver = true;
             }
         }
 
@@ -219,7 +234,7 @@ int main(int argc, char** argv) {
         window.clear(sf::Color::Black);
 
         // If paused, draw headers.
-        if (paused) {
+        if (isPaused) {
             window.draw(header);
             window.draw(subheader);
         }

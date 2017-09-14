@@ -10,11 +10,11 @@
 SFML/Graphics/CircleShape.hpp
 -
 Paddle.h
-../include/Paddle.h
+-
 
 ../include/CollisionUtils.h
 Ball.h
-../include/Ball.h
+-
 
 ../include/GC.h
 

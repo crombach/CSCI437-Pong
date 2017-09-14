@@ -5,7 +5,7 @@
 #ifndef COLLISIONUTILS_H
 #define COLLISIONUTILS_H
 
-#include "Ball.h"
+#include <Ball.h>
 
 typedef enum Collision {
     LEFT,

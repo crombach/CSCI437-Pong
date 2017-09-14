@@ -9,8 +9,16 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
+typedef enum AIDirection {
+    UP,
+    DOWN,
+    STATIC
+} Direction;
+
 class Paddle : public sf::RectangleShape {
+private:
     float speed;
+    Direction direction;
 public:
     // Constructors
     Paddle(float x, float y);
@@ -18,11 +26,12 @@ public:
     // Movement methods.
     void moveUp(float distance);
     void moveDown(float distance);
-    void moveAsAI(sf::Vector2f ballPosition, float deltaTime);
+    void noMove();
+    void moveAsAI(float deltaTime, float ballDx, float ballDy, sf::Vector2f ballPosition, bool recalculate);
     void reset(bool left);
     // Getters and setters.
     float getSpeed();
-    void setSpeed(float speed);
+    Direction getDirection();
 };
 
 

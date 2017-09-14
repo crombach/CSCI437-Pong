@@ -7,24 +7,28 @@
 
 
 #include <SFML/Graphics/CircleShape.hpp>
-#include "Paddle.h"
+#include <Paddle.h>
 
 class Ball : public sf::CircleShape {
+private:
     float dx; // x axis speed
     float dy; // y axis speed
-private:
     void randomizeMovement();
 public:
     // Constructors.
     Ball(float x, float y);
     Ball(float x, float y, sf::CircleShape shape);
     // Movement methods.
-    void setDx(float dx);
-    void setDy(float dy);
     void bounceX();
     void bounceY();
     void move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle);
     void reset();
+    void paddleHit(Paddle *paddle);
+    // Getters/setters
+    void setDx(float dx);
+    float getDx();
+    void setDy(float dy);
+    float getDy();
 };
 
 

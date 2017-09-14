@@ -16,7 +16,10 @@ Paddle::Paddle(float x, float y) {
     setPosition(x, y);
 
     // Set default speed.
-    speed = 350;
+    speed = GC::HEIGHT * (2.f / 3.f);
+
+    // Set AI direction.
+    direction = STATIC;
 }
 
 // Use a custom rectangle shape for the paddle.
@@ -25,10 +28,15 @@ Paddle::Paddle(float x, float y, sf::RectangleShape shape) : RectangleShape(shap
     setPosition(x,y);
 
     // Set default speed.
-    speed = 350;
+    speed = GC::HEIGHT * (2.f / 3.f);
+
+    // Set AI direction.
+    direction = STATIC;
 }
 
 void Paddle::moveUp(float deltaTime) {
+    // Set direction flag.
+    direction = UP;
     // Calculate movement distance.
     float distance = deltaTime * speed;
     // Don't let the paddle move off-screen.
@@ -42,6 +50,8 @@ void Paddle::moveUp(float deltaTime) {
 }
 
 void Paddle::moveDown(float deltaTime) {
+    // Set direction flag.
+    direction = DOWN;
     // Calculate movement distance.
     float distance = deltaTime * speed;
     // Don't let the paddle move off-screen.
@@ -54,22 +64,34 @@ void Paddle::moveDown(float deltaTime) {
     }
 }
 
+void Paddle::noMove() {
+    // Just set direction flag.
+    direction = STATIC;
+}
+
 float Paddle::getSpeed() {
     return speed;
 }
 
-void Paddle::setSpeed(float speed) {
-    this->speed = speed;
-}
-
 // AI-controlled movement. Takes ball position and tries to move to it.
-void Paddle::moveAsAI(sf::Vector2f ballPosition, float deltaTime) {
-    // If the paddle's center is above the ball, move down.
-    if (ballPosition.y > getPosition().y) {
+void Paddle::moveAsAI(float deltaTime, float ballDx, float ballDy, sf::Vector2f ballPosition, bool recalculate) {
+    // If recalculate flag is set, need to recalculate direction to move.
+    if (recalculate) {
+        // If the paddle's center is above the ball, move down.
+        if (ballPosition.y > getPosition().y) {
+            direction = DOWN;
+        }
+        // If the paddle's center is below the ball, move up.
+        else if (ballPosition.y < getPosition().y) {
+            direction = UP;
+        }
+    }
+
+    // Actually move the paddle.
+    if (direction == DOWN) {
         moveDown(deltaTime);
     }
-    // If the paddle's center is below the ball, move up.
-    else if (ballPosition.y < getPosition().y) {
+    else if (direction == UP) {
         moveUp(deltaTime);
     }
 }
@@ -82,4 +104,8 @@ void Paddle::reset(bool left) {
     else {
         setPosition(GC::WIDTH - (GC::WIDTH / 80.f), GC::HEIGHT / 2.f);
     }
+}
+
+Direction Paddle::getDirection() {
+    return direction;
 }
