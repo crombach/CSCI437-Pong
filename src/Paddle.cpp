@@ -87,12 +87,12 @@ void Paddle::moveAsAI(float deltaTime, float ballDx, float ballDy, sf::Vector2f 
         }
         // If the ball is across from the paddle...
         else {
-            // If the ball is moving up at at least half the paddle's speed, move up.
-            if (ballDy < 0 && (ballDy < -(speed / 2.f))) {
+            // If the ball is moving up at at least 2/3 the paddle's speed, move up.
+            if (ballDy < 0 && (ballDy < -(speed / 1.5f))) {
                 direction = UP;
             }
-            // If the ball is moving down at at least half the paddle's speed, move down.
-            else if (ballDy > 0 && (ballDy > (speed / 2.f))) {
+            // If the ball is moving down at at least 2/3 the paddle's speed, move down.
+            else if (ballDy > 0 && (ballDy > (speed / 1.5f))) {
                 direction = DOWN;
             }
             // Otherwise, don't move.

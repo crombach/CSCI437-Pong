@@ -71,6 +71,13 @@ int main(int argc, char** argv) {
     // Create ball.
     Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
 
+    // Ghost ball variables for the AI to calculate moves.
+    float lastBallDx = 0.f;
+    Ball ghostBall = Ball(ball.getPosition().x, ball.getPosition().y);
+    ghostBall.setDx(ball.getDx());
+    ghostBall.setDy(ball.getDy());
+    ghostBall.setFillColor(sf::Color::Green);
+
     // Game state flags.
     bool isPaused = true;
     bool justStarted = true;
@@ -159,8 +166,28 @@ int main(int argc, char** argv) {
             // Move the ball. This also checks for collisions.
             ball.move(dTime, &playerPaddle, &aiPaddle);
 
-            // Move the AI paddle. Recalculate direction once every .1 seconds.
-            aiPaddle.moveAsAI(dTime, ball.getDx(), ball.getDy(), ball.getPosition(), doRecalculateAI);
+            // If the ball bounced off the player's paddle, create a ghost ball that moves faster
+            // for the AI to follow. We'll never draw this ball, it's just for the AI to use to calculate its moves.
+            if (lastBallDx <= 0 && ball.getDx() > 0) {
+                ghostBall.setPosition(ball.getPosition().x, ball.getPosition().y);
+                ghostBall.setDx(ball.getDx());
+                ghostBall.setDy(ball.getDy());
+            }
+            // Only move the ghost ball if it hasn't gotten to the AI's side yet.
+            if ((ghostBall.getPosition().x + ghostBall.getRadius()) < aiPaddle.getGlobalBounds().left
+                    && ghostBall.getDx() > 0) {
+
+                ghostBall.move(dTime * 1.15f, &playerPaddle, &aiPaddle);
+            }
+            else {
+                ghostBall.setDx(0.f);
+                ghostBall.setDy(0.f);
+            }
+            // Store the ball's last speed.
+            lastBallDx = ball.getDx();
+
+            // Move the AI paddle. Recalculate direction once every .15 seconds.
+            aiPaddle.moveAsAI(dTime, ghostBall.getDx(), ghostBall.getDy(), ghostBall.getPosition(), doRecalculateAI);
             if (doRecalculateAI) {
                 secondsSinceAIRecalculated = 0.f;
                 doRecalculateAI = false;
@@ -184,6 +211,8 @@ int main(int argc, char** argv) {
                 ball.reset();
                 // Flag that the game just started again.
                 justStarted = true;
+                // Reset ball speed for AI.
+                lastBallDx = 0.f;
             }
 
             // Check for an AI point.
@@ -198,6 +227,8 @@ int main(int argc, char** argv) {
                 ball.reset();
                 // Flag that the game just started again.
                 justStarted = true;
+                // Reset ball speed for AI.
+                lastBallDx = 0.f;
             }
 
             // Check for win/loss.
