@@ -38,8 +38,9 @@ void Ball::setDy(float dy) {
 
 void Ball::bounceX() {
     // Set up a random number generator and distributions.
+    // The ball should speed up over time.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-5, 25);
+    std::uniform_real_distribution<float> perturbationDistribution(-5, 40);
     float deltaDx = perturbationDistribution(randomEngine);
 
     // Add a small random perturbation.
@@ -53,8 +54,9 @@ void Ball::bounceX() {
 
 void Ball::bounceY() {
     // Set up a random number generator and distributions.
+    // The ball should speed up over time.
     std::default_random_engine randomEngine(std::random_device{}());
-    std::uniform_real_distribution<float> perturbationDistribution(-5, 25);
+    std::uniform_real_distribution<float> perturbationDistribution(-5, 40);
     float deltaDy = perturbationDistribution(randomEngine);
 
     // Add a small random perturbation.

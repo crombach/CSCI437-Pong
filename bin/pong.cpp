@@ -9,7 +9,6 @@
 #include <GC.h>
 #include <Paddle.h>
 #include <Ball.h>
-#include <unistd.h>
 #include <TextUtils.h>
 
 void placeHeaders(sf::Text *header, sf::Text *subheader);
@@ -74,10 +73,13 @@ int main(int argc, char** argv) {
 
     // Game state flags.
     bool paused = true;
+    bool justStarted = true;
     bool gameOver = false;
 
-    // Timer.
+    // Timer things.
     sf::Clock clock;
+    float dTime;
+    float secondsSinceStarted = 0.f;
 
     // Start main loop
     while(window.isOpen()) {
@@ -107,9 +109,11 @@ int main(int argc, char** argv) {
                 }
                 // Pause/unpause.
                 paused = !paused;
-                // Give the player a small amount of time to prepare.
+                // If unpausing, restart the clock to avoid unwanted ball/paddle movement.
+                // Also, mark that the game has just started to give the player some breathing room.
                 if (!paused) {
                     clock.restart();
+                    justStarted = true;
                 }
             }
 
@@ -121,8 +125,23 @@ int main(int argc, char** argv) {
 
         // Handle game events if we are in-game.
         if (!paused) {
-            // Store time passed since last frame.
-            float dTime = clock.restart().asSeconds();
+            /*
+             * Store time passed since last frame. If the game just started or just unpaused,
+             * give the player a brief time before the ball starts moving. This is done by preventing
+             * dTime (delta time, or the change in time) from incrementing.
+             * */
+            if (justStarted) {
+                secondsSinceStarted += clock.restart().asSeconds();
+                dTime = 0.f;
+                // Give the play 0.6 seconds to get ready.
+                if (secondsSinceStarted >= 0.6f) {
+                    justStarted = false;
+                    secondsSinceStarted = 0.f;
+                }
+            }
+            else {
+                dTime = clock.restart().asSeconds();
+            }
 
             // Move the player's paddle if commanded.
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
@@ -140,20 +159,30 @@ int main(int argc, char** argv) {
 
             // Check for a player point.
             if (ball.getPosition().x + ball.getRadius() >= GC::WIDTH) {
+                // Don't let the ball clip out of the screen.
+                ball.setPosition(GC::WIDTH - ball.getRadius(), ball.getPosition().y);
+                // Increase player score.
                 playerScore.increment();
+                // Reset UI elements.
                 playerPaddle.reset(true);
                 aiPaddle.reset(false);
                 ball.reset();
+                // Flag that the game just started again.
+                justStarted = true;
             }
 
             // Check for an AI point.
             if (ball.getPosition().x - ball.getRadius() <= 0) {
-                //printf("Ball Position X: %lf \n", ball.getPosition().x);
-                //printf("Ball Radius: %lf \n", ball.getRadius());
+                // Don't let the ball clip out of the screen.
+                ball.setPosition(ball.getRadius(), ball.getPosition().y);
+                // Increase AI score.
                 aiScore.increment();
+                // Reset UI elements.
                 playerPaddle.reset(true);
                 aiPaddle.reset(false);
                 ball.reset();
+                // Flag that the game just started again.
+                justStarted = true;
             }
 
             // Check for win/loss.
@@ -189,12 +218,12 @@ int main(int argc, char** argv) {
         // Clear screen and fill with black
         window.clear(sf::Color::Black);
 
-        // If paused, draw pause messages.
+        // If paused, draw headers.
         if (paused) {
             window.draw(header);
             window.draw(subheader);
         }
-        // Draw game components if not paused or game over.
+        // Draw game components if not paused.
         else {
             window.draw(playerScore);
             window.draw(aiScore);
