@@ -10,8 +10,8 @@
 
 class TextUtils {
 public:
-    static void centerTextOrigin(sf::Text *text);
-    static void centerTwoTexts(sf::Text *top, sf::Text *bottom);
+    static void centerTextOrigin(sf::Text &text);
+    static void centerTwoTexts(sf::Text &top, sf::Text &bottom);
 };
 
 

@@ -22,7 +22,7 @@ typedef enum Collision {
 class CollisionUtils {
 public:
     // Check for collision between a ball and a paddle.
-    static Collision check(Ball *ball, Paddle *paddle);
+    static Collision check(Ball &ball, Paddle &paddle);
 private:
     static float getDistance(float x1, float y1, float x2, float y2);
 };

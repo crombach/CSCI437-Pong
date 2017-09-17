@@ -11,7 +11,7 @@
 #include <Ball.h>
 #include <TextUtils.h>
 
-void placeHeaders(sf::Text *header, sf::Text *subheader);
+void placeHeaders(sf::Text &header, sf::Text &subheader);
 
 // Main function containing game loop.
 int main(int argc, char** argv) {
@@ -58,15 +58,15 @@ int main(int argc, char** argv) {
     subheader.setColor(sf::Color(80, 80, 80));
 
     // Place headers.
-    placeHeaders(&header, &subheader);
+    placeHeaders(header, subheader);
 
     // Create score labels.
-    ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, &wargames);
-    ScoreLabel aiScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, &wargames);
+    ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, wargames);
+    ScoreLabel aiScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, wargames);
 
     // Create paddles.
-    Paddle playerPaddle = Paddle(GC::WIDTH / 80.f, GC::HEIGHT / 2.f);
-    Paddle aiPaddle = Paddle(GC::WIDTH - (GC::WIDTH / 80.f), GC::HEIGHT / 2.f);
+    Paddle leftPaddle = Paddle(GC::WIDTH / 80.f, GC::HEIGHT / 2.f);
+    Paddle rightPaddle = Paddle(GC::WIDTH - (GC::WIDTH / 80.f), GC::HEIGHT / 2.f);
 
     // Create ball.
     Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
                     header.setString(pauseHeader);
                     subheader.setString(pauseSubheader);
                     // Update the text origins and positioning.
-                    placeHeaders(&header, &subheader);
+                    placeHeaders(header, subheader);
                 }
                 // Pause/unpause.
                 isPaused = !isPaused;
@@ -154,17 +154,17 @@ int main(int argc, char** argv) {
 
             // Move the player's paddle if commanded.
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                playerPaddle.moveUp(dTime);
+                leftPaddle.moveUp(dTime);
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                playerPaddle.moveDown(dTime);
+                leftPaddle.moveDown(dTime);
             }
             else {
-                playerPaddle.noMove();
+                leftPaddle.noMove();
             }
 
             // Move the ball. This also checks for collisions.
-            ball.move(dTime, &playerPaddle, &aiPaddle);
+            ball.move(dTime, leftPaddle, rightPaddle);
 
             // If the ball bounced off the player's paddle, create a ghost ball that moves faster
             // for the AI to follow. We'll never draw this ball, it's just for the AI to use to calculate its moves.
@@ -174,20 +174,20 @@ int main(int argc, char** argv) {
                 ghostBall.setDy(ball.getDy());
             }
             // Only move the ghost ball if it hasn't gotten to the AI's side yet.
-            if ((ghostBall.getPosition().x + ghostBall.getRadius()) < aiPaddle.getGlobalBounds().left
+            if ((ghostBall.getPosition().x + ghostBall.getRadius()) < rightPaddle.getGlobalBounds().left
                     && ghostBall.getDx() > 0) {
 
-                ghostBall.move(dTime * 1.15f, &playerPaddle, &aiPaddle);
+                ghostBall.move(dTime * 1.15f, leftPaddle, rightPaddle);
             }
             else {
                 ghostBall.setDx(0.f);
                 ghostBall.setDy(0.f);
             }
-            // Store the ball's last speed.
+            // Store the real ball's last speed.
             lastBallDx = ball.getDx();
 
             // Move the AI paddle. Recalculate direction once every .15 seconds.
-            aiPaddle.moveAsAI(dTime, ghostBall.getDx(), ghostBall.getDy(), ghostBall.getPosition(), doRecalculateAI);
+            rightPaddle.moveAsAI(dTime, ghostBall.getDx(), ghostBall.getDy(), ghostBall.getPosition(), doRecalculateAI);
             if (doRecalculateAI) {
                 secondsSinceAIRecalculated = 0.f;
                 doRecalculateAI = false;
@@ -200,14 +200,14 @@ int main(int argc, char** argv) {
             }
 
             // Check for a player point.
-            if (ball.getPosition().x + ball.getRadius() >= GC::WIDTH) {
+            if ((ball.getPosition().x + ball.getRadius()) >= GC::WIDTH) {
                 // Don't let the ball clip out of the screen.
                 ball.setPosition(GC::WIDTH - ball.getRadius(), ball.getPosition().y);
                 // Increase player score.
                 playerScore.increment();
                 // Reset UI elements.
-                playerPaddle.reset(true);
-                aiPaddle.reset(false);
+                leftPaddle.reset(true);
+                rightPaddle.reset(false);
                 ball.reset();
                 // Flag that the game just started again.
                 justStarted = true;
@@ -216,14 +216,14 @@ int main(int argc, char** argv) {
             }
 
             // Check for an AI point.
-            if (ball.getPosition().x - ball.getRadius() <= 0) {
+            if ((ball.getPosition().x - ball.getRadius()) <= 0) {
                 // Don't let the ball clip out of the screen.
                 ball.setPosition(ball.getRadius(), ball.getPosition().y);
                 // Increase AI score.
                 aiScore.increment();
                 // Reset UI elements.
-                playerPaddle.reset(true);
-                aiPaddle.reset(false);
+                leftPaddle.reset(true);
+                rightPaddle.reset(false);
                 ball.reset();
                 // Flag that the game just started again.
                 justStarted = true;
@@ -246,13 +246,13 @@ int main(int argc, char** argv) {
                 subheader.setString(endGameSubheader);
 
                 // Place headers.
-                placeHeaders(&header, &subheader);
+                placeHeaders(header, subheader);
 
                 // Reset game elements.
                 playerScore.reset();
                 aiScore.reset();
-                playerPaddle.reset(true);
-                aiPaddle.reset(false);
+                leftPaddle.reset(true);
+                rightPaddle.reset(false);
                 ball.reset();
 
                 // Pause the game on the end screen.
@@ -273,8 +273,8 @@ int main(int argc, char** argv) {
         else {
             window.draw(playerScore);
             window.draw(aiScore);
-            window.draw(playerPaddle);
-            window.draw(aiPaddle);
+            window.draw(leftPaddle);
+            window.draw(rightPaddle);
             window.draw(ball);
         }
 
@@ -287,7 +287,7 @@ int main(int argc, char** argv) {
 }
 
 // Update the origins and positioning of the headers.
-void placeHeaders(sf::Text *header, sf::Text *subheader) {
+void placeHeaders(sf::Text &header, sf::Text &subheader) {
     TextUtils::centerTextOrigin(header);
     TextUtils::centerTextOrigin(subheader);
     TextUtils::centerTwoTexts(header, subheader);

@@ -13,7 +13,7 @@ private:
     uint score;
 public:
     // Constructor
-    ScoreLabel(float x, float y, sf::Font *font);
+    ScoreLabel(float x, float y, sf::Font &font);
     // Scoring methods.
     uint getScore();
     void increment();

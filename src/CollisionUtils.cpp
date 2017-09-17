@@ -8,17 +8,17 @@
  * This is done by checking if the ball's origin (center) is
  * within one ball radius of the paddle.
  */
-Collision CollisionUtils::check(Ball *ball, Paddle *paddle) {
+Collision CollisionUtils::check(Ball &ball, Paddle &paddle) {
     // Ball properties.
-    float ballX = ball->getPosition().x;
-    float ballY = ball->getPosition().y;
-    float ballRadius = ball->getRadius();
+    float ballX = ball.getPosition().x;
+    float ballY = ball.getPosition().y;
+    float ballRadius = ball.getRadius();
 
     // Paddle boundaries.
-    float paddleTop = paddle->getPosition().y - (paddle->getSize().y / 2);
-    float paddleBottom = paddle->getPosition().y + (paddle->getSize().y / 2);
-    float paddleLeft = paddle->getPosition().x - (paddle->getSize().x / 2);
-    float paddleRight = paddle->getPosition().x + (paddle->getSize().x / 2);
+    float paddleTop = paddle.getPosition().y - (paddle.getSize().y / 2);
+    float paddleBottom = paddle.getPosition().y + (paddle.getSize().y / 2);
+    float paddleLeft = paddle.getPosition().x - (paddle.getSize().x / 2);
+    float paddleRight = paddle.getPosition().x + (paddle.getSize().x / 2);
 
     // Top collisions.
     if (ballY <= paddleTop) {

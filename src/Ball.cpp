@@ -76,7 +76,7 @@ void Ball::bounceY() {
     }
 }
 
-void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
+void Ball::move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle) {
     // Calculate movement distance.
     float xDistance = deltaTime * dx;
     float yDistance = deltaTime * dy;
@@ -86,17 +86,17 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
 
     // Check for paddle hits.
     // Left paddle.
-    switch (CollisionUtils::check(this, leftPaddle)) {
+    switch (CollisionUtils::check(*this, leftPaddle)) {
         case RIGHT : {
             bounceX();
-            float newX = leftPaddle->getGlobalBounds().left + leftPaddle->getGlobalBounds().width + getRadius() + .1f;
+            float newX = leftPaddle.getGlobalBounds().left + leftPaddle.getGlobalBounds().width + getRadius() + .1f;
             setPosition(newX, getPosition().y);
             paddleHit(leftPaddle);
             break;
         }
         case TOP : {
             bounceY();
-            float newY = leftPaddle->getGlobalBounds().top - getRadius() - .1f;
+            float newY = leftPaddle.getGlobalBounds().top - getRadius() - .1f;
             setPosition(getPosition().x, newY);
             paddleHit(leftPaddle);
             break;
@@ -108,7 +108,7 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
         }
         case BOTTOM : {
             bounceY();
-            float newY = leftPaddle->getGlobalBounds().top + leftPaddle->getGlobalBounds().height + getRadius() + .1f;
+            float newY = leftPaddle.getGlobalBounds().top + leftPaddle.getGlobalBounds().height + getRadius() + .1f;
             setPosition(getPosition().x, newY);
             paddleHit(leftPaddle);
             break;
@@ -121,17 +121,17 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
         default : break;
     }
     // Right paddle.
-    switch (CollisionUtils::check(this, rightPaddle)) {
+    switch (CollisionUtils::check(*this, rightPaddle)) {
         case LEFT : {
             bounceX();
-            float newX = rightPaddle->getGlobalBounds().left - getRadius() - .1f;
+            float newX = rightPaddle.getGlobalBounds().left - getRadius() - .1f;
             setPosition(newX, getPosition().y);
             paddleHit(rightPaddle);
             break;
         }
         case TOP : {
             bounceY();
-            float newY = rightPaddle->getGlobalBounds().top - getRadius() - .1f;
+            float newY = rightPaddle.getGlobalBounds().top - getRadius() - .1f;
             setPosition(getPosition().x, newY);
             paddleHit(rightPaddle);
             break;
@@ -143,7 +143,7 @@ void Ball::move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle) {
         }
         case BOTTOM : {
             bounceY();
-            float newY = rightPaddle->getGlobalBounds().top + rightPaddle->getGlobalBounds().height + getRadius() + .1f;
+            float newY = rightPaddle.getGlobalBounds().top + rightPaddle.getGlobalBounds().height + getRadius() + .1f;
             setPosition(getPosition().x, newY);
             paddleHit(rightPaddle);
             break;
@@ -213,35 +213,35 @@ void Ball::reset() {
  * Also, the closer the ball hits to the end of the paddle the more its x-speed will increase.
  * Hitting the middle half of the paddle will slow the ball's x-speed.
  */
-void Ball::paddleHit(Paddle *paddle) {
+void Ball::paddleHit(Paddle paddle) {
     // Set speed factors.
     float verticalSpeedFactor = 0.2f;
     float horizontalSpeedFactor = 0.25f;
 
     // If the ball and paddle are moving the same direction, speed the ball up.
-    if ((dy > 0) && (paddle->getDirection() == DOWN)) {
-        dy += paddle->getSpeed() * verticalSpeedFactor;
+    if ((dy > 0) && (paddle.getDirection() == DOWN)) {
+        dy += paddle.getSpeed() * verticalSpeedFactor;
     }
-    else if ((dy < 0) && (paddle->getDirection() == UP)) {
-        dy -= paddle->getSpeed() * verticalSpeedFactor;
+    else if ((dy < 0) && (paddle.getDirection() == UP)) {
+        dy -= paddle.getSpeed() * verticalSpeedFactor;
     }
     // If the ball and paddle are moving opposite directions, speed the ball down.
-    else if ((dy > 0) && (paddle->getDirection() == UP)) {
-        dy -= paddle->getSpeed() * verticalSpeedFactor;
+    else if ((dy > 0) && (paddle.getDirection() == UP)) {
+        dy -= paddle.getSpeed() * verticalSpeedFactor;
     }
-    else if ((dy < 0) && (paddle->getDirection() == DOWN)) {
-        dy += paddle->getSpeed() * verticalSpeedFactor;
+    else if ((dy < 0) && (paddle.getDirection() == DOWN)) {
+        dy += paddle.getSpeed() * verticalSpeedFactor;
     }
 
     // Check how far the ball hit from the center of the ball.
-    float distanceFromCenter = std::abs(getPosition().y - paddle->getPosition().y);
+    float distanceFromCenter = std::abs(getPosition().y - paddle.getPosition().y);
     // Hitting the middle half of the paddle slows the ball down.
-    if (distanceFromCenter < (paddle->getLocalBounds().height / 4.f)) {
+    if (distanceFromCenter < (paddle.getLocalBounds().height / 4.f)) {
         if (dx > 0) {
-            dx -= (paddle->getLocalBounds().height - distanceFromCenter) * horizontalSpeedFactor;
+            dx -= (paddle.getLocalBounds().height - distanceFromCenter) * horizontalSpeedFactor;
         }
         else {
-            dx += (paddle->getLocalBounds().height - distanceFromCenter) * horizontalSpeedFactor;
+            dx += (paddle.getLocalBounds().height - distanceFromCenter) * horizontalSpeedFactor;
         }
     }
     // Hitting the outer two quarters of the paddle speeds the ball up.

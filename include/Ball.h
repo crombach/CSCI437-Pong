@@ -21,9 +21,9 @@ public:
     // Movement methods.
     void bounceX();
     void bounceY();
-    void move(float deltaTime, Paddle *leftPaddle, Paddle *rightPaddle);
+    void move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle);
     void reset();
-    void paddleHit(Paddle *paddle);
+    void paddleHit(Paddle paddle);
     // Getters/setters
     void setDx(float dx);
     float getDx();

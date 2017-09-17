@@ -6,31 +6,31 @@
 #include <ScoreLabel.h>
 #include <TextUtils.h>
 
-ScoreLabel::ScoreLabel(float x, float y, sf::Font *font) {
+ScoreLabel::ScoreLabel(float x, float y, sf::Font &font) {
     // Set initial score to zero.
     score = 0;
 
     // Set text properties.
-    setFont(*font);
+    setFont(font);
     setCharacterSize(GC::HEIGHT / 5);
     setColor(sf::Color(80, 80, 80));
     setString(std::to_string(score));
 
     // Handle size and positioning
-    TextUtils::centerTextOrigin(this);
+    TextUtils::centerTextOrigin(*this);
     setPosition(x, y);
 }
 
 void ScoreLabel::increment() {
     score++;
     setString(std::to_string(score));
-    TextUtils::centerTextOrigin(this);
+    TextUtils::centerTextOrigin(*this);
 }
 
 void ScoreLabel::reset() {
     score = 0;
     setString(std::to_string(score));
-    TextUtils::centerTextOrigin(this);
+    TextUtils::centerTextOrigin(*this);
 }
 
 uint ScoreLabel::getScore() {
