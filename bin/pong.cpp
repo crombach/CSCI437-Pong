@@ -5,11 +5,13 @@
  */
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <ScoreLabel.h>
 #include <GC.h>
 #include <Paddle.h>
 #include <Ball.h>
 #include <TextUtils.h>
+using namespace std;
 
 void placeHeaders(sf::Text &header, sf::Text &subheader);
 
@@ -17,31 +19,70 @@ void placeHeaders(sf::Text &header, sf::Text &subheader);
 int main(int argc, char** argv) {
     // Define window constants.
     const uint COLOR_DEPTH = 32;
-    const std::string WINDOW_TITLE = "Pong - Cullen Rombach";
+    const string WINDOW_TITLE = "Pong - Cullen Rombach";
     const uint WINDOW_STYLE = sf::Style::Close;
 
     // Create main window with vsync enabled. Screen tearing sucks.
     sf::RenderWindow window(sf::VideoMode(GC::WIDTH, GC::HEIGHT, COLOR_DEPTH), WINDOW_TITLE, WINDOW_STYLE);
     window.setVerticalSyncEnabled(true);
 
-    // Load in fonts.
-    sf::Font wargames;
-    std::string wargamesLocation = "resources/wargames.ttf";
-    if (!wargames.loadFromFile(wargamesLocation)) {
-        throw std::runtime_error("Failed to load font from " + wargamesLocation);
+    // Load in sounds.
+    // Left hit.
+    sf::SoundBuffer leftHitSoundBuffer;
+    string leftHitLocation = "resources/leftHit.wav";
+    if (!leftHitSoundBuffer.loadFromFile(leftHitLocation)) {
+        throw runtime_error("Failed to load sound from " + leftHitLocation);
     }
+    auto leftHit = make_shared<sf::Sound>(leftHitSoundBuffer);
+    // Right hit.
+    sf::SoundBuffer rightHitSoundBuffer;
+    string rightHitLocation = "resources/rightHit.wav";
+    if (!rightHitSoundBuffer.loadFromFile(rightHitLocation)) {
+        throw runtime_error("Failed to load sound from " + rightHitLocation);
+    }
+    auto rightHit = make_shared<sf::Sound>(rightHitSoundBuffer);
+    // Wall hit.
+    sf::SoundBuffer wallHitSoundBuffer;
+    string wallHitLocation = "resources/wallHit.wav";
+    if (!wallHitSoundBuffer.loadFromFile(wallHitLocation)) {
+        throw runtime_error("Failed to load sound from " + wallHitLocation);
+    }
+    auto wallHit = make_shared<sf::Sound>(wallHitSoundBuffer);
+    // Player score.
+    sf::SoundBuffer playerScoreSoundBuffer;
+    string playerScoreLocation = "resources/playerScore.wav";
+    if (!playerScoreSoundBuffer.loadFromFile(playerScoreLocation)) {
+        throw runtime_error("Failed to load sound from " + playerScoreLocation);
+    }
+    sf::Sound playerScoreSound(playerScoreSoundBuffer);
+    // AI score.
+    sf::SoundBuffer aiScoreSoundBuffer;
+    string aiScoreLocation = "resources/aiScore.wav";
+    if (!aiScoreSoundBuffer.loadFromFile(aiScoreLocation)) {
+        throw runtime_error("Failed to load sound from " + aiScoreLocation);
+    }
+    sf::Sound aiScoreSound(aiScoreSoundBuffer);
+
+    // Load in fonts.
+    // Wargames
+    sf::Font wargames;
+    string wargamesLocation = "resources/wargames.ttf";
+    if (!wargames.loadFromFile(wargamesLocation)) {
+        throw runtime_error("Failed to load font from " + wargamesLocation);
+    }
+    // Autobus
     sf::Font autobus;
-    std::string autobusLocation = "resources/autobus.ttf";
+    string autobusLocation = "resources/autobus.ttf";
     if (!autobus.loadFromFile(autobusLocation)) {
-        throw std::runtime_error("Failed to load font from " + autobusLocation);
+        throw runtime_error("Failed to load font from " + autobusLocation);
     }
 
     // Store some messages to use when the game is paused.
-    std::string pauseHeader = "PRESS SPACE TO CONTINUE";
-    std::string winHeader = "YOU WIN";
-    std::string lossHeader = "YOU LOSE";
-    std::string pauseSubheader = "PRESS [SPACE] AT ANY TIME TO PAUSE";
-    std::string endGameSubheader = "PRESS [SPACE] TO RETRY OR [ESC] TO QUIT";
+    string pauseHeader = "PRESS SPACE TO CONTINUE";
+    string winHeader = "YOU WIN";
+    string lossHeader = "YOU LOSE";
+    string pauseSubheader = "PRESS [SPACE] AT ANY TIME TO PAUSE";
+    string endGameSubheader = "PRESS [SPACE] TO RETRY OR [ESC] TO QUIT";
 
     // Create a header Text object for use during game pauses.
     sf::Text header;
@@ -69,11 +110,12 @@ int main(int argc, char** argv) {
     Paddle rightPaddle = Paddle(GC::WIDTH - (GC::WIDTH / 80.f), GC::HEIGHT / 2.f);
 
     // Create ball.
-    Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f);
+    Ball ball = Ball(GC::WIDTH / 2.f, GC::HEIGHT / 2.f, leftHit, rightHit, wallHit);
 
     // Ghost ball variables for the AI to calculate moves.
     float lastBallDx = 0.f;
-    Ball ghostBall = Ball(ball.getPosition().x, ball.getPosition().y);
+    auto nullSound = shared_ptr<sf::Sound>(nullptr);
+    Ball ghostBall = Ball(ball.getPosition().x, ball.getPosition().y, nullSound, nullSound, nullSound);
     ghostBall.setDx(ball.getDx());
     ghostBall.setDy(ball.getDy());
     ghostBall.setFillColor(sf::Color::Green); // Relevant when testing the ghost ball's behavior.
@@ -181,6 +223,8 @@ int main(int argc, char** argv) {
                 holdState = true;
                 // Reset ball speed for AI.
                 lastBallDx = 0.f;
+                // Play sound.
+                playerScoreSound.play();
             }
             // Check for an AI point.
             else if ((ball.getPosition().x + ball.getRadius()) <= 0) {
@@ -195,6 +239,8 @@ int main(int argc, char** argv) {
                 holdState = true;
                 // Reset ball speed for AI.
                 lastBallDx = 0.f;
+                // Play sound.
+                aiScoreSound.play();
             }
 
             // Check for win/loss.
@@ -204,7 +250,7 @@ int main(int argc, char** argv) {
                     header.setString(winHeader);
                 }
                 // If they lost, given them the loser text.
-                if (rightScore.getScore() == 11) {
+                else if (rightScore.getScore() == 11) {
                     header.setString(lossHeader);
                 }
 

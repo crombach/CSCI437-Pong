@@ -8,21 +8,17 @@
 
 // Build a default ball.
 // Default balls are white and have a radius of 1/60th the screen's width.
-Ball::Ball(float x, float y) {
+Ball::Ball(float x, float y, shared_ptr<sf::Sound> &leftHit, shared_ptr<sf::Sound> &rightHit, shared_ptr<sf::Sound> &wallHit) {
     // Build default shape.
     setRadius(GC::WIDTH / 80.f);
     setFillColor(sf::Color::White);
     setOrigin(getRadius(), getRadius());
     setPosition(x, y);
 
-    // Generate a random starting speed vector.
-    randomizeMovement();
-}
-
-// Use a custom circle shape for the ball..
-Ball::Ball(float x, float y, sf::CircleShape shape) : CircleShape(shape) {
-    // Set position.
-    setPosition(x, y);
+    // Store sounds effects.
+    this->leftHit = leftHit;
+    this->rightHit = rightHit;
+    this->wallHit = wallHit;
 
     // Generate a random starting speed vector.
     randomizeMovement();
@@ -85,8 +81,19 @@ void Ball::move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle) {
     sf::CircleShape::move(xDistance, yDistance);
 
     // Check for paddle hits.
-    // Left paddle.
-    switch (CollisionUtils::check(*this, leftPaddle)) {
+    Collision leftCollision = (CollisionUtils::check(*this, leftPaddle));
+    Collision rightCollision = (CollisionUtils::check(*this, rightPaddle));
+
+    // Play paddle hit sound.
+    if (leftCollision != NONE && leftHit != nullptr) {
+        leftHit->play();
+    }
+    else if (rightCollision != NONE && rightHit != nullptr) {
+        rightHit->play();
+    }
+
+    // Handle left paddle hits.
+    switch (leftCollision) {
         case RIGHT : {
             bounceX();
             float newX = leftPaddle.getGlobalBounds().left + leftPaddle.getGlobalBounds().width + getRadius() + .1f;
@@ -124,8 +131,9 @@ void Ball::move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle) {
         }
         default : break;
     }
-    // Right paddle.
-    switch (CollisionUtils::check(*this, rightPaddle)) {
+
+    // Handle right paddle hits.
+    switch (rightCollision) {
         case LEFT : {
             bounceX();
             float newX = rightPaddle.getGlobalBounds().left - getRadius() - .1f;
@@ -169,10 +177,18 @@ void Ball::move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle) {
         // Collide with top.
         setPosition(getPosition().x, getRadius() + .1f);
         bounceY();
+        // Play sound.
+        if (wallHit != nullptr) {
+            wallHit->play();
+        }
     } else if (getPosition().y + getRadius() >= GC::HEIGHT) {
         // Collide with bottom.
         setPosition(getPosition().x, GC::HEIGHT - getRadius() - .1f);
         bounceY();
+        // Play sound.
+        if (wallHit != nullptr) {
+            wallHit->play();
+        }
     }
 }
 

@@ -11,6 +11,10 @@ SFML/Graphics/CircleShape.hpp
 -
 Paddle.h
 -
+memory
+-
+SFML/Audio/Sound.hpp
+-
 
 ../include/CollisionUtils.h
 Ball.h

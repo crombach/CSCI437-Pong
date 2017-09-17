@@ -11,6 +11,10 @@ SFML/Graphics/CircleShape.hpp
 -
 Paddle.h
 -
+memory
+-
+SFML/Audio/Sound.hpp
+-
 
 ../include/CollisionUtils.h
 Ball.h
@@ -36,6 +40,8 @@ SFML/Graphics/Text.hpp
 
 /home/cullen/Code/school/pong/bin/pong.cpp
 SFML/Graphics.hpp
+-
+SFML/Audio.hpp
 -
 ScoreLabel.h
 -

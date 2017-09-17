@@ -23,19 +23,6 @@ Paddle::Paddle(float x, float y) {
     secondsSinceAIRecalculation = 0.f;
 }
 
-// Use a custom rectangle shape for the paddle.
-Paddle::Paddle(float x, float y, sf::RectangleShape shape) : RectangleShape(shape) {
-    // Set x and y position.
-    setPosition(x,y);
-
-    // Set default speed.
-    speed = GC::HEIGHT;
-
-    // Set AI variables.
-    direction = STATIC;
-    secondsSinceAIRecalculation = 0.f;
-}
-
 void Paddle::moveUp(float deltaTime) {
     // Set direction flag.
     direction = UP;

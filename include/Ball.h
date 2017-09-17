@@ -8,16 +8,24 @@
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <Paddle.h>
+#include <memory>
+#include <SFML/Audio/Sound.hpp>
+using namespace std;
 
 class Ball : public sf::CircleShape {
 private:
-    float dx; // x axis speed
-    float dy; // y axis speed
+    // Speed components
+    float dx;
+    float dy;
+    // Sound effects.
+    shared_ptr<sf::Sound> leftHit;
+    shared_ptr<sf::Sound> rightHit;
+    shared_ptr<sf::Sound> wallHit;
+    // Helper methods.
     void randomizeMovement();
 public:
     // Constructors.
-    Ball(float x, float y);
-    Ball(float x, float y, sf::CircleShape shape);
+    Ball(float x, float y, shared_ptr<sf::Sound> &leftHit, shared_ptr<sf::Sound> &rightHit, shared_ptr<sf::Sound> &wallHit);
     // Movement methods.
     void bounceX();
     void bounceY();

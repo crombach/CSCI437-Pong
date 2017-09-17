@@ -23,7 +23,6 @@ private:
 public:
     // Constructors
     Paddle(float x, float y);
-    Paddle(float x, float y, sf::RectangleShape shape);
     // Movement methods.
     void moveUp(float distance);
     void moveDown(float distance);
