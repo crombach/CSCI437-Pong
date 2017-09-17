@@ -300,7 +300,7 @@ void Ball::moveAsGhostBall(float dTime, Paddle &leftPaddle, Paddle &rightPaddle,
     if (((getPosition().x - getRadius()) > (leftPaddle.getGlobalBounds().left + leftPaddle.getGlobalBounds().width))
         && getDx() < 0) {
 
-        move(dTime * 1.1f, leftPaddle, rightPaddle);
+        move(dTime * 1.075f, leftPaddle, rightPaddle);
     }
     else {
         setDx(0.f);
