@@ -80,13 +80,13 @@ int main(int argc, char** argv) {
 
     // Game state flags.
     bool isPaused = true;
-    bool justStarted = true;
+    bool holdState = true;
     bool isGameOver = false;
 
     // Timer things.
     sf::Clock clock;
     float dTime;
-    float secondsSinceStarted = 0.f;
+    float secondsSinceStateHeld = 0.f;
 
     // Start main loop
     while(window.isOpen()) {
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
                 // Also, mark that the game has just started to give the player some breathing room.
                 if (!isPaused) {
                     clock.restart();
-                    justStarted = true;
+                    holdState = true;
                 }
             }
             // Pause if the game loses focus.
@@ -130,19 +130,19 @@ int main(int argc, char** argv) {
         // Handle game events if we are in-game.
         if (!isPaused) {
             /*
-             * Store time passed since last frame. If the game just started or just unpaused,
-             * give the player a brief time before the ball starts moving. This is done by preventing
-             * dTime (delta time, or the change in time) from incrementing.
+             * If the "holdState" flag is set, give the player a brief time before the game state changes again.
+             * This is done by preventing dTime (the change in time) from incrementing.
              * */
-            if (justStarted) {
-                secondsSinceStarted += clock.restart().asSeconds();
+            if (holdState) {
+                secondsSinceStateHeld += clock.restart().asSeconds();
                 dTime = 0.f;
-                // Give the player 0.75 seconds to get ready.
-                if (secondsSinceStarted >= 0.75f) {
-                    justStarted = false;
-                    secondsSinceStarted = 0.f;
+                // Give the player a brief time to get ready.
+                if (secondsSinceStateHeld >= 0.75f) {
+                    holdState = false;
+                    secondsSinceStateHeld = 0.f;
                 }
             } else {
+                // Store time passed since the last frame.
                 dTime = clock.restart().asSeconds();
             }
 
@@ -178,7 +178,7 @@ int main(int argc, char** argv) {
                 ball.reset();
                 ghostBall.reset();
                 // Flag that the game just started again.
-                justStarted = true;
+                holdState = true;
                 // Reset ball speed for AI.
                 lastBallDx = 0.f;
             }
@@ -192,7 +192,7 @@ int main(int argc, char** argv) {
                 ball.reset();
                 ghostBall.reset();
                 // Flag that the game just started again.
-                justStarted = true;
+                holdState = true;
                 // Reset ball speed for AI.
                 lastBallDx = 0.f;
             }

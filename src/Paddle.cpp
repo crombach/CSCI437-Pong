@@ -78,10 +78,11 @@ float Paddle::getSpeed() {
 // AI-controlled movement. Takes ball position and tries to move to it.
 void Paddle::moveAsAI(float deltaTime, float ballDy, sf::Vector2f ballPosition) {
     // Only recalculate the AI if it has been more than 0.15 seconds.
-    if (secondsSinceAIRecalculation < 0.15) {
+    if (secondsSinceAIRecalculation < 0.15f) {
         secondsSinceAIRecalculation += deltaTime;
-        return;
     } else {
+        // Reset recalculation timer.
+        secondsSinceAIRecalculation = 0.f;
         // If the ball is above the paddle, move up.
         if (ballPosition.y < (getPosition().y - (getLocalBounds().height / 2.f))) {
             direction = UP;
@@ -92,12 +93,12 @@ void Paddle::moveAsAI(float deltaTime, float ballDy, sf::Vector2f ballPosition) 
         }
         // If the ball is across from the paddle...
         else {
-            // If the ball is moving up at at least 2/3 the paddle's speed, move up.
-            if (ballDy < 0 && (ballDy < -(speed / 1.5f))) {
+            // If the ball is moving up at at least 1/2 the paddle's speed, move up.
+            if (ballDy < 0 && (ballDy < -(speed / 2.f))) {
                 direction = UP;
             }
-            // If the ball is moving down at at least 2/3 the paddle's speed, move down.
-            else if (ballDy > 0 && (ballDy > (speed / 1.5f))) {
+            // If the ball is moving down at at least 1/2 the paddle's speed, move down.
+            else if (ballDy > 0 && (ballDy > (speed / 2.f))) {
                 direction = DOWN;
             }
             // Otherwise, don't move.
@@ -117,8 +118,8 @@ void Paddle::moveAsAI(float deltaTime, float ballDy, sf::Vector2f ballPosition) 
 }
 
 // Reset the paddle to starting position.
-void Paddle::reset(bool left) {
-    if (left) {
+void Paddle::reset(bool isLeft) {
+    if (isLeft) {
         setPosition(GC::WIDTH / 80.f, GC::HEIGHT / 2.f);
     }
     else {

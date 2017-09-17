@@ -29,7 +29,7 @@ public:
     void moveDown(float distance);
     void noMove();
     void moveAsAI(float deltaTime, float ballDy, sf::Vector2f ballPosition);
-    void reset(bool left);
+    void reset(bool isLeft);
     // Getters and setters.
     float getSpeed();
     Direction getDirection();
