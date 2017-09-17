@@ -169,31 +169,28 @@ int main(int argc, char** argv) {
             }
 
             // Check for a player point.
-            if ((ball.getPosition().x + ball.getRadius()) >= GC::WIDTH) {
-                // Don't let the ball clip out of the screen.
-                ball.setPosition(GC::WIDTH - ball.getRadius(), ball.getPosition().y);
+            if ((ball.getPosition().x - ball.getRadius()) >= GC::WIDTH) {
                 // Increase player score.
                 leftScore.increment();
                 // Reset UI elements.
                 leftPaddle.reset(true);
                 rightPaddle.reset(false);
                 ball.reset();
+                ghostBall.reset();
                 // Flag that the game just started again.
                 justStarted = true;
                 // Reset ball speed for AI.
                 lastBallDx = 0.f;
             }
-
             // Check for an AI point.
-            if ((ball.getPosition().x - ball.getRadius()) <= 0) {
-                // Don't let the ball clip out of the screen.
-                ball.setPosition(ball.getRadius(), ball.getPosition().y);
+            else if ((ball.getPosition().x + ball.getRadius()) <= 0) {
                 // Increase AI score.
                 rightScore.increment();
                 // Reset UI elements.
                 leftPaddle.reset(true);
                 rightPaddle.reset(false);
                 ball.reset();
+                ghostBall.reset();
                 // Flag that the game just started again.
                 justStarted = true;
                 // Reset ball speed for AI.

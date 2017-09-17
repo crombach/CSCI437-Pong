@@ -223,8 +223,8 @@ void Ball::reset() {
  */
 void Ball::paddleHit(Paddle paddle) {
     // Set speed factors.
-    float verticalSpeedFactor = 0.4f;
-    float horizontalSpeedFactor = 0.25f;
+    float verticalSpeedFactor = 0.1f;
+    float horizontalSpeedFactor = 1.f;
 
     // If the ball and paddle are moving the same direction, speed the ball up.
     if ((dy > 0) && (paddle.getDirection() == DOWN)) {
@@ -245,7 +245,7 @@ void Ball::paddleHit(Paddle paddle) {
     float distanceFromCenter = std::abs(getPosition().y - paddle.getPosition().y);
     // Hitting the middle half of the paddle slows the ball down.
     if (distanceFromCenter < (paddle.getLocalBounds().height / 4.f)) {
-        if (dx > 0) {
+        if (dx > 0.f) {
             dx -= (paddle.getLocalBounds().height - distanceFromCenter) * horizontalSpeedFactor;
         }
         else {
@@ -254,16 +254,20 @@ void Ball::paddleHit(Paddle paddle) {
     }
     // Hitting the outer two quarters of the paddle speeds the ball up.
     else {
-        if (dx > 0) {
-            printf("Speed before outer hit: %lf \n", dx);
+        if (dx > 0.f) {
             dx += distanceFromCenter * horizontalSpeedFactor;
-            printf("Speed after outer hit: %lf \n\n", dx);
         }
         else {
-            printf("Speed before outer hit: %lf \n", dx);
             dx -= distanceFromCenter * horizontalSpeedFactor;
-            printf("Speed after outer hit: %lf \n\n", dx);
         }
+    }
+
+    // Minimum dx is game width / 2 (2 seconds to cross the screen)
+    if ((dx > 0.f) && (dx < (GC::WIDTH / 2.f))) {
+        dx = GC::WIDTH / 2.f;
+    }
+    else if ((dx < 0.f) && (dx > -(GC::WIDTH / 2.f))) {
+        dx = -(GC::WIDTH / 2.f);
     }
 }
 
@@ -280,7 +284,7 @@ void Ball::moveAsGhostBall(float dTime, Paddle &leftPaddle, Paddle &rightPaddle,
     if ((getPosition().x + getRadius()) < rightPaddle.getGlobalBounds().left
         && getDx() > 0) {
 
-        move(dTime * 1.15f, leftPaddle, rightPaddle);
+        move(dTime * 1.1f, leftPaddle, rightPaddle);
     }
     else {
         setDx(0.f);

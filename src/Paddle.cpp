@@ -16,7 +16,7 @@ Paddle::Paddle(float x, float y) {
     setPosition(x, y);
 
     // Set default speed.
-    speed = GC::HEIGHT * (2.f / 3.f);
+    speed = GC::HEIGHT;
 
     // Set AI variables.
     direction = STATIC;
@@ -29,7 +29,7 @@ Paddle::Paddle(float x, float y, sf::RectangleShape shape) : RectangleShape(shap
     setPosition(x,y);
 
     // Set default speed.
-    speed = GC::HEIGHT * (2.f / 3.f);
+    speed = GC::HEIGHT;
 
     // Set AI variables.
     direction = STATIC;
