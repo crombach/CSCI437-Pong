@@ -62,6 +62,13 @@ int main(int argc, char** argv) {
         throw runtime_error("Failed to load sound from " + aiScoreLocation);
     }
     sf::Sound aiScoreSound(aiScoreSoundBuffer);
+    // Menu blip.
+    sf::SoundBuffer blipSoundBuffer;
+    string blipLocation = "resources/blip.wav";
+    if (!blipSoundBuffer.loadFromFile(blipLocation)) {
+        throw runtime_error("Failed to load sound from " + blipLocation);
+    }
+    sf::Sound blip(blipSoundBuffer);
 
     // Load in fonts.
     // Wargames
@@ -107,7 +114,7 @@ int main(int argc, char** argv) {
     subheader.setFont(autobus);
     subheader.setCharacterSize(GC::HEIGHT / 18);
     subheader.setString(mainMenuSubheader);
-    subheader.setColor(sf::Color(80, 80, 80));
+    subheader.setColor(sf::Color(100, 100, 100));
 
     // Place headers.
     placeHeaders(header, subheader);
@@ -133,10 +140,11 @@ int main(int argc, char** argv) {
 
     // Game state flags.
     bool isMainMenu = true;
+    bool isControls = false;
     bool isPaused = true;
-    bool holdState = true;
     bool isGameOver = false;
     bool isMultiplayer = false;
+    bool holdState = true;
 
     // Timer things.
     sf::Clock clock;
@@ -157,12 +165,21 @@ int main(int argc, char** argv) {
                 window.close();
             }
             // If the player pressed 1 from the main menu, start the game as single player.
-            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Num1 && isMainMenu) {
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Num1 && isMainMenu && !isControls) {
+                // Play sound.
+                blip.play();
                 // Set game state flags.
                 isMainMenu = false;
                 isMultiplayer = false;
                 isPaused = false;
                 holdState = true;
+                // Reset game actors and scores.
+                ball.reset();
+                ghostBall.reset();
+                rightPaddle.reset(false);
+                leftPaddle.reset(true);
+                leftScore.reset();
+                rightScore.reset();
                 // Update header text.
                 header.setString(pauseHeader);
                 subheader.setString(pauseSubheader);
@@ -172,12 +189,21 @@ int main(int argc, char** argv) {
                 clock.restart();
             }
             // If the player pressed 2 from the main menu, start the game as multiplayer.
-            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Num2 && isMainMenu) {
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Num2 && isMainMenu && !isControls) {
+                // Play sound.
+                blip.play();
                 // Set game state flags.
                 isMainMenu = false;
                 isMultiplayer = true;
                 isPaused = false;
                 holdState = true;
+                // Reset game actors and scores.
+                ball.reset();
+                ghostBall.reset();
+                rightPaddle.reset(false);
+                leftPaddle.reset(true);
+                leftScore.reset();
+                rightScore.reset();
                 // Update header text.
                 header.setString(pauseHeader);
                 subheader.setString(pauseSubheader);
@@ -188,8 +214,10 @@ int main(int argc, char** argv) {
             }
             // If the player pressed C from the main menu, show them the controls.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::C && isMainMenu) {
+                // Play sound.
+                blip.play();
                 // Set game state flags.
-                isMainMenu = false;
+                isControls = true;
                 // Update header text.
                 header.setString(controlsHeader);
                 subheader.setString(controlsSubheader);
@@ -197,7 +225,9 @@ int main(int argc, char** argv) {
                 placeHeaders(header, subheader);
             }
             // Control pausing with the space bar.
-            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space && !isMainMenu) {
+                // Play sound.
+                blip.play();
                 // If the game is over, mark it as not over and reset the text labels.
                 if (isGameOver) {
                     isGameOver = false;
@@ -208,9 +238,7 @@ int main(int argc, char** argv) {
                     placeHeaders(header, subheader);
                 }
                 // Pause/unpause only if the game has started.
-                if (!isMainMenu) {
-                    isPaused = !isPaused;
-                }
+                isPaused = !isPaused;
                 // If unpausing, restart the clock to avoid unwanted ball/paddle movement.
                 // Also, mark that the game has just started to give the player some breathing room.
                 if (!isPaused) {
@@ -220,15 +248,11 @@ int main(int argc, char** argv) {
             }
             // The M key takes the player back to the main menu if the game is currently paused.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::M && isPaused) {
-                // Reset game actors and scores.
-                ball.reset();
-                ghostBall.reset();
-                rightPaddle.reset(false);
-                leftPaddle.reset(true);
-                leftScore.reset();
-                rightScore.reset();
+                // Play sound.
+                blip.play();
                 // Set game state flags.
                 isMainMenu = true;
+                isControls = false;
                 // Update header text.
                 header.setString(mainMenuHeader);
                 subheader.setString(mainMenuSubheader);

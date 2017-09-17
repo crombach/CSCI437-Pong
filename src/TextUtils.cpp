@@ -13,7 +13,8 @@ void TextUtils::centerTextOrigin(sf::Text &text) {
 
 // Take two Text objects and center them together.
 void TextUtils::centerTwoTexts(sf::Text &top, sf::Text &bottom) {
-    float totalHeight = top.getLocalBounds().height + bottom.getLocalBounds().height;
-    top.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) - (totalHeight / 3.f));
-    bottom.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) + (totalHeight / 3.f));
+    float topHeight = top.getLocalBounds().height;
+    float bottomHeight = bottom.getLocalBounds().height;
+    top.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) - ((bottomHeight / 2.f) + 10.f));
+    bottom.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) + ((topHeight / 2.f) + 10.f));
 }
