@@ -142,10 +142,19 @@ int main(int argc, char** argv) {
                     justStarted = false;
                     secondsSinceStarted = 0.f;
                 }
-            }
-            else {
+            } else {
                 dTime = clock.restart().asSeconds();
             }
+
+            // Move the ball. This also checks for collisions.
+            ball.move(dTime, leftPaddle, rightPaddle);
+            // Move the ghost ball used to calculate AI movements.
+            ghostBall.moveAsGhostBall(dTime, leftPaddle, rightPaddle, ball, lastBallDx);
+            // Store the real ball's last speed. Used for the Ghost Ball.
+            lastBallDx = ball.getDx();
+
+            // Move the AI paddle.
+            rightPaddle.moveAsAI(dTime, ghostBall.getDy(), ghostBall.getPosition());
 
             // Move the player's paddle if commanded.
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
@@ -158,18 +167,6 @@ int main(int argc, char** argv) {
                 // This is just used to flag that the paddle shouldn't move.
                 leftPaddle.noMove();
             }
-
-            // Move the ball. This also checks for collisions.
-            ball.move(dTime, leftPaddle, rightPaddle);
-
-            // Move the ghost ball used to calculate AI movements.
-            ghostBall.moveAsGhostBall(dTime, lastBallDx, ball, leftPaddle, rightPaddle);
-
-            // Store the real ball's last speed. Used for the Ghost Ball.
-            lastBallDx = ball.getDx();
-
-            // Move the AI paddle.
-            rightPaddle.moveAsAI(dTime, ghostBall.getDy(), ghostBall.getPosition());
 
             // Check for a player point.
             if ((ball.getPosition().x + ball.getRadius()) >= GC::WIDTH) {

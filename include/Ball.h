@@ -24,7 +24,7 @@ public:
     void reset();
     void paddleHit(Paddle paddle);
     void move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle);
-    void moveAsGhostBall(float dTime, float lastBallDx, Ball &ball, Paddle &leftPaddle, Paddle &rightPaddle);
+    void moveAsGhostBall(float dTime, Paddle &leftPaddle, Paddle &rightPaddle, Ball &ball, float lastBallDx);
     // Getters/setters
     void setDx(float dx);
     float getDx();

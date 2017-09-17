@@ -103,6 +103,8 @@ void Ball::move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle) {
         }
         case TOP_RIGHT : {
             bounceX();
+            float newX = leftPaddle.getGlobalBounds().left + leftPaddle.getGlobalBounds().width + getRadius() + .1f;
+            setPosition(newX, getPosition().y);
             paddleHit(leftPaddle);
             break;
         }
@@ -115,6 +117,8 @@ void Ball::move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle) {
         }
         case BOTTOM_RIGHT : {
             bounceX();
+            float newX = leftPaddle.getGlobalBounds().left + leftPaddle.getGlobalBounds().width + getRadius() + .1f;
+            setPosition(newX, getPosition().y);
             paddleHit(leftPaddle);
             break;
         }
@@ -138,6 +142,8 @@ void Ball::move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle) {
         }
         case TOP_LEFT : {
             bounceX();
+            float newX = rightPaddle.getGlobalBounds().left - getRadius() - .1f;
+            setPosition(newX, getPosition().y);
             paddleHit(rightPaddle);
             break;
         }
@@ -150,6 +156,8 @@ void Ball::move(float deltaTime, Paddle &leftPaddle, Paddle &rightPaddle) {
         }
         case BOTTOM_LEFT : {
             bounceX();
+            float newX = rightPaddle.getGlobalBounds().left - getRadius() - .1f;
+            setPosition(newX, getPosition().y);
             paddleHit(rightPaddle);
             break;
         }
@@ -215,7 +223,7 @@ void Ball::reset() {
  */
 void Ball::paddleHit(Paddle paddle) {
     // Set speed factors.
-    float verticalSpeedFactor = 0.2f;
+    float verticalSpeedFactor = 0.4f;
     float horizontalSpeedFactor = 0.25f;
 
     // If the ball and paddle are moving the same direction, speed the ball up.
@@ -247,16 +255,20 @@ void Ball::paddleHit(Paddle paddle) {
     // Hitting the outer two quarters of the paddle speeds the ball up.
     else {
         if (dx > 0) {
+            printf("Speed before outer hit: %lf \n", dx);
             dx += distanceFromCenter * horizontalSpeedFactor;
+            printf("Speed after outer hit: %lf \n\n", dx);
         }
         else {
+            printf("Speed before outer hit: %lf \n", dx);
             dx -= distanceFromCenter * horizontalSpeedFactor;
+            printf("Speed after outer hit: %lf \n\n", dx);
         }
     }
 }
 
 // Control the ball as a Ghost Ball -- used to calculate AI movements.
-void Ball::moveAsGhostBall(float dTime, float lastBallDx, Ball &ball, Paddle &leftPaddle, Paddle &rightPaddle) {
+void Ball::moveAsGhostBall(float dTime, Paddle &leftPaddle, Paddle &rightPaddle, Ball &ball, float lastBallDx) {
     // If the ball bounced off the player's paddle, create a ghost ball that moves faster
     // for the AI to follow. We'll never draw this ball, it's just for the AI to use to calculate its moves.
     if (lastBallDx <= 0 && ball.getDx() > 0) {
