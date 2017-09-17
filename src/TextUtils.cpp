@@ -11,8 +11,9 @@ void TextUtils::centerTextOrigin(sf::Text &text) {
     text.setOrigin(localBounds.left + (localBounds.width / 2), localBounds.top + (localBounds.height / 2));
 }
 
-// Take two Text objects and center them.
+// Take two Text objects and center them together.
 void TextUtils::centerTwoTexts(sf::Text &top, sf::Text &bottom) {
-    top.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) - top.getLocalBounds().height);
-    bottom.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) + bottom.getLocalBounds().height);
+    float totalHeight = top.getLocalBounds().height + bottom.getLocalBounds().height;
+    top.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) - (totalHeight / 3.f));
+    bottom.setPosition(GC::WIDTH / 2, (GC::HEIGHT / 2) + (totalHeight / 3.f));
 }

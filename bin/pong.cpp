@@ -78,24 +78,28 @@ int main(int argc, char** argv) {
     }
 
     // Store some messages to use when the game is paused.
+    string singlePlayerWinHeader = "YOU WIN!";
+    string singlePlayerLossHeader = "YOU LOSE!";
+    string leftPlayerWinHeader = "LEFT PLAYER WINS!";
+    string rightPlayerWinHeader = "RIGHT PLAYER WINS!";
+    string startHeader = "WELCOME TO PONG";
+    string startSubheader = "[1] SINGLE PLAYER\n[2] MULTI-PLAYER\n[SPACE]\t  PAUSE";
     string pauseHeader = "PRESS SPACE TO CONTINUE";
-    string winHeader = "YOU WIN";
-    string lossHeader = "YOU LOSE";
-    string pauseSubheader = "PRESS [SPACE] AT ANY TIME TO PAUSE";
-    string endGameSubheader = "PRESS [SPACE] TO RETRY OR [ESC] TO QUIT";
+    string pauseSubheader = "[SPACE] PAUSE\n[ESC]\t\tQUIT";
+    string endGameSubheader = "[SPACE] RETRY\n[ESC]\t\tQUIT";
 
     // Create a header Text object for use during game pauses.
     sf::Text header;
     header.setFont(wargames);
     header.setCharacterSize(GC::HEIGHT / 16);
-    header.setString(pauseHeader);
+    header.setString(startHeader);
     header.setColor(sf::Color::White);
 
     // Create a subheader Text object for use during game pauses.
     sf::Text subheader;
     subheader.setFont(autobus);
     subheader.setCharacterSize(GC::HEIGHT / 18);
-    subheader.setString(pauseSubheader);
+    subheader.setString(startSubheader);
     subheader.setColor(sf::Color(80, 80, 80));
 
     // Place headers.
@@ -121,9 +125,11 @@ int main(int argc, char** argv) {
     ghostBall.setFillColor(sf::Color::Green); // Relevant when testing the ghost ball's behavior.
 
     // Game state flags.
+    bool hasStarted = false;
     bool isPaused = true;
     bool holdState = true;
     bool isGameOver = false;
+    bool isMultiplayer = false;
 
     // Timer things.
     sf::Clock clock;
@@ -139,9 +145,37 @@ int main(int argc, char** argv) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-            // Allow the player to quit with the escape button.
+            // Allow the player to quit (at any time) with the escape button.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape) {
                 window.close();
+            }
+            // If the player pressed 1 from the start screen, start the game as single player.
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Num1) {
+                if (!hasStarted) {
+                    // Set game state flags.
+                    hasStarted = true;
+                    isMultiplayer = false;
+                    isPaused = false;
+                    // Update header text.
+                    header.setString(pauseHeader);
+                    subheader.setString(pauseSubheader);
+                    // Reposition headers.
+                    placeHeaders(header, subheader);
+                }
+            }
+            // If the player pressed 2 from the start screen, start the game as multiplayer.
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Num2) {
+                if (!hasStarted) {
+                    // Set game state flags.
+                    hasStarted = true;
+                    isMultiplayer = true;
+                    isPaused = false;
+                    // Update header text.
+                    header.setString(pauseHeader);
+                    subheader.setString(pauseSubheader);
+                    // Reposition headers.
+                    placeHeaders(header, subheader);
+                }
             }
             // Control pausing with the space bar.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
@@ -154,8 +188,10 @@ int main(int argc, char** argv) {
                     // Update the text origins and positioning.
                     placeHeaders(header, subheader);
                 }
-                // Pause/unpause.
-                isPaused = !isPaused;
+                // Pause/unpause only if the game has started.
+                if (hasStarted) {
+                    isPaused = !isPaused;
+                }
                 // If unpausing, restart the clock to avoid unwanted ball/paddle movement.
                 // Also, mark that the game has just started to give the player some breathing room.
                 if (!isPaused) {
@@ -190,30 +226,65 @@ int main(int argc, char** argv) {
 
             // Move the ball. This also checks for collisions.
             ball.move(dTime, leftPaddle, rightPaddle);
-            // Move the ghost ball used to calculate AI movements.
-            ghostBall.moveAsGhostBall(dTime, leftPaddle, rightPaddle, ball, lastBallDx);
-            // Store the real ball's last speed. Used for the Ghost Ball.
-            lastBallDx = ball.getDx();
 
-            // Move the AI paddle.
-            rightPaddle.moveAsAI(dTime, ghostBall.getDy(), ghostBall.getPosition());
+            // Handle AI movements in single player.
+            if (!isMultiplayer) {
+                // Move the ghost ball used to calculate AI movements.
+                ghostBall.moveAsGhostBall(dTime, leftPaddle, rightPaddle, ball, lastBallDx);
+                // Store the real ball's last speed. Used for the Ghost Ball.
+                lastBallDx = ball.getDx();
+                // Move the AI paddle.
+                leftPaddle.moveAsAI(dTime, ghostBall.getDy(), ghostBall.getPosition());
+            }
 
-            // Move the player's paddle if commanded.
+            // If we're in multiplayer, look for W/S inputs to control left paddle.
+            if (isMultiplayer) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    leftPaddle.moveUp(dTime);
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    leftPaddle.moveDown(dTime);
+                }
+                else {
+                    leftPaddle.noMove();
+                }
+            }
+
+            // Look for up/down inputs to move right paddle.
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                leftPaddle.moveUp(dTime);
+                rightPaddle.moveUp(dTime);
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                leftPaddle.moveDown(dTime);
+                rightPaddle.moveDown(dTime);
             }
             else {
-                // This is just used to flag that the paddle shouldn't move.
-                leftPaddle.noMove();
+                rightPaddle.noMove();
             }
 
-            // Check for a player point.
+            // Check for left point.
             if ((ball.getPosition().x - ball.getRadius()) >= GC::WIDTH) {
-                // Increase player score.
+                // Increase left score.
                 leftScore.increment();
+                // Reset UI elements.
+                leftPaddle.reset(true);
+                rightPaddle.reset(false);
+                ball.reset();
+                ghostBall.reset();
+                // Flag that the game just started again.
+                holdState = true;
+                // Reset ball speed for AI.
+                lastBallDx = 0.f;
+                // Play sound.
+                if (isMultiplayer) {
+                    playerScoreSound.play();
+                } else {
+                    aiScoreSound.play();
+                }
+            }
+            // Check for right point.
+            else if ((ball.getPosition().x + ball.getRadius()) <= 0) {
+                // Increase right score.
+                rightScore.increment();
                 // Reset UI elements.
                 leftPaddle.reset(true);
                 rightPaddle.reset(false);
@@ -226,32 +297,28 @@ int main(int argc, char** argv) {
                 // Play sound.
                 playerScoreSound.play();
             }
-            // Check for an AI point.
-            else if ((ball.getPosition().x + ball.getRadius()) <= 0) {
-                // Increase AI score.
-                rightScore.increment();
-                // Reset UI elements.
-                leftPaddle.reset(true);
-                rightPaddle.reset(false);
-                ball.reset();
-                ghostBall.reset();
-                // Flag that the game just started again.
-                holdState = true;
-                // Reset ball speed for AI.
-                lastBallDx = 0.f;
-                // Play sound.
-                aiScoreSound.play();
-            }
 
             // Check for win/loss.
             if (leftScore.getScore() == 11 || rightScore.getScore() == 11) {
-                // If the player won, give then the winner text.
+                // If the left won...
                 if (leftScore.getScore() == 11) {
-                    header.setString(winHeader);
+                    if (isMultiplayer) {
+                        // Give left player win for multiplayer.
+                        header.setString(leftPlayerWinHeader);
+                    } else {
+                        // Give a loss for single player.
+                        header.setString(singlePlayerLossHeader);
+                    }
                 }
-                // If they lost, given them the loser text.
+                // If the right won...
                 else if (rightScore.getScore() == 11) {
-                    header.setString(lossHeader);
+                    if (isMultiplayer) {
+                        // Give right player win for multiplayer.
+                        header.setString(rightPlayerWinHeader);
+                    } else {
+                        // Give a win for single player.
+                        header.setString(singlePlayerWinHeader);
+                    }
                 }
 
                 // Set subheader text.

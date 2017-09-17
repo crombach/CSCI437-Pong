@@ -291,14 +291,14 @@ void Ball::paddleHit(Paddle paddle) {
 void Ball::moveAsGhostBall(float dTime, Paddle &leftPaddle, Paddle &rightPaddle, Ball &ball, float lastBallDx) {
     // If the ball bounced off the player's paddle, create a ghost ball that moves faster
     // for the AI to follow. We'll never draw this ball, it's just for the AI to use to calculate its moves.
-    if (lastBallDx <= 0 && ball.getDx() > 0) {
+    if (lastBallDx >= 0 && ball.getDx() < 0) {
         setPosition(ball.getPosition().x, ball.getPosition().y);
         setDx(ball.getDx());
         setDy(ball.getDy());
     }
     // Only move the ghost ball if it hasn't gotten to the AI's side yet.
-    if ((getPosition().x + getRadius()) < rightPaddle.getGlobalBounds().left
-        && getDx() > 0) {
+    if (((getPosition().x - getRadius()) > (leftPaddle.getGlobalBounds().left + leftPaddle.getGlobalBounds().width))
+        && getDx() < 0) {
 
         move(dTime * 1.1f, leftPaddle, rightPaddle);
     }
