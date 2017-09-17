@@ -78,28 +78,28 @@ int main(int argc, char** argv) {
     }
 
     // Store some messages to use when the game is paused.
+    string mainMenuHeader = "MAIN MENU";
+    string mainMenuSubheader = "[1] SINGLE PLAYER\n[2] MULTI-PLAYER\n[SPACE]\t  PAUSE";
+    string pauseHeader = "GAME PAUSED";
+    string pauseSubheader = "[SPACE] CONTINUE\n[M]\t   MAIN MENU\n[ESC]\t\t\t QUIT";
     string singlePlayerWinHeader = "YOU WIN!";
     string singlePlayerLossHeader = "YOU LOSE!";
     string leftPlayerWinHeader = "LEFT PLAYER WINS!";
     string rightPlayerWinHeader = "RIGHT PLAYER WINS!";
-    string startHeader = "WELCOME TO PONG";
-    string startSubheader = "[1] SINGLE PLAYER\n[2] MULTI-PLAYER\n[SPACE]\t  PAUSE";
-    string pauseHeader = "PRESS SPACE TO CONTINUE";
-    string pauseSubheader = "[SPACE] PAUSE\n[ESC]\t\tQUIT";
-    string endGameSubheader = "[SPACE] RETRY\n[ESC]\t\tQUIT";
+    string endGameSubheader = "[SPACE]\t  RETRY\n[M]\t   MAIN MENU\n[ESC]\t\t\t QUIT";
 
     // Create a header Text object for use during game pauses.
     sf::Text header;
     header.setFont(wargames);
     header.setCharacterSize(GC::HEIGHT / 16);
-    header.setString(startHeader);
+    header.setString(mainMenuHeader);
     header.setColor(sf::Color::White);
 
     // Create a subheader Text object for use during game pauses.
     sf::Text subheader;
     subheader.setFont(autobus);
     subheader.setCharacterSize(GC::HEIGHT / 18);
-    subheader.setString(startSubheader);
+    subheader.setString(mainMenuSubheader);
     subheader.setColor(sf::Color(80, 80, 80));
 
     // Place headers.
@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
     ghostBall.setFillColor(sf::Color::Green); // Relevant when testing the ghost ball's behavior.
 
     // Game state flags.
-    bool hasStarted = false;
+    bool isMainMenu = false;
     bool isPaused = true;
     bool holdState = true;
     bool isGameOver = false;
@@ -151,9 +151,9 @@ int main(int argc, char** argv) {
             }
             // If the player pressed 1 from the start screen, start the game as single player.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Num1) {
-                if (!hasStarted) {
+                if (!isMainMenu) {
                     // Set game state flags.
-                    hasStarted = true;
+                    isMainMenu = true;
                     isMultiplayer = false;
                     isPaused = false;
                     // Update header text.
@@ -165,9 +165,9 @@ int main(int argc, char** argv) {
             }
             // If the player pressed 2 from the start screen, start the game as multiplayer.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Num2) {
-                if (!hasStarted) {
+                if (!isMainMenu) {
                     // Set game state flags.
-                    hasStarted = true;
+                    isMainMenu = true;
                     isMultiplayer = true;
                     isPaused = false;
                     // Update header text.
@@ -189,7 +189,7 @@ int main(int argc, char** argv) {
                     placeHeaders(header, subheader);
                 }
                 // Pause/unpause only if the game has started.
-                if (hasStarted) {
+                if (isMainMenu) {
                     isPaused = !isPaused;
                 }
                 // If unpausing, restart the clock to avoid unwanted ball/paddle movement.
@@ -198,6 +198,16 @@ int main(int argc, char** argv) {
                     clock.restart();
                     holdState = true;
                 }
+            }
+            // The M key takes the player back to the main menu if the game is currently paused.
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::M) {
+                // Set game state flags.
+                isMainMenu = false;
+                // Update header text.
+                header.setString(mainMenuHeader);
+                subheader.setString(mainMenuSubheader);
+                // Reposition headers.
+                placeHeaders(header, subheader);
             }
             // Pause if the game loses focus.
             else if (event.type == sf::Event::LostFocus) {
