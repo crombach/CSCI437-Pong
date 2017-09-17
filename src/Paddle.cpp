@@ -18,8 +18,9 @@ Paddle::Paddle(float x, float y) {
     // Set default speed.
     speed = GC::HEIGHT * (2.f / 3.f);
 
-    // Set AI direction.
+    // Set AI variables.
     direction = STATIC;
+    secondsSinceAIRecalculation = 0.f;
 }
 
 // Use a custom rectangle shape for the paddle.
@@ -30,8 +31,9 @@ Paddle::Paddle(float x, float y, sf::RectangleShape shape) : RectangleShape(shap
     // Set default speed.
     speed = GC::HEIGHT * (2.f / 3.f);
 
-    // Set AI direction.
+    // Set AI variables.
     direction = STATIC;
+    secondsSinceAIRecalculation = 0.f;
 }
 
 void Paddle::moveUp(float deltaTime) {
@@ -74,9 +76,12 @@ float Paddle::getSpeed() {
 }
 
 // AI-controlled movement. Takes ball position and tries to move to it.
-void Paddle::moveAsAI(float deltaTime, float ballDx, float ballDy, sf::Vector2f ballPosition, bool recalculate) {
-    // If recalculate flag is set, need to recalculate direction to move.
-    if (recalculate) {
+void Paddle::moveAsAI(float deltaTime, float ballDy, sf::Vector2f ballPosition) {
+    // Only recalculate the AI if it has been more than 0.15 seconds.
+    if (secondsSinceAIRecalculation < 0.15) {
+        secondsSinceAIRecalculation += deltaTime;
+        return;
+    } else {
         // If the ball is above the paddle, move up.
         if (ballPosition.y < (getPosition().y - (getLocalBounds().height / 2.f))) {
             direction = UP;

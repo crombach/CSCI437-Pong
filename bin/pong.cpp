@@ -61,8 +61,8 @@ int main(int argc, char** argv) {
     placeHeaders(header, subheader);
 
     // Create score labels.
-    ScoreLabel playerScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, wargames);
-    ScoreLabel aiScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, wargames);
+    ScoreLabel leftScore = ScoreLabel(GC::WIDTH / 3.f, GC::HEIGHT / 2.f, wargames);
+    ScoreLabel rightScore = ScoreLabel((GC::WIDTH / 3.f) * 2.f, GC::HEIGHT / 2.f, wargames);
 
     // Create paddles.
     Paddle leftPaddle = Paddle(GC::WIDTH / 80.f, GC::HEIGHT / 2.f);
@@ -76,19 +76,17 @@ int main(int argc, char** argv) {
     Ball ghostBall = Ball(ball.getPosition().x, ball.getPosition().y);
     ghostBall.setDx(ball.getDx());
     ghostBall.setDy(ball.getDy());
-    ghostBall.setFillColor(sf::Color::Green);
+    ghostBall.setFillColor(sf::Color::Green); // Relevant when testing the ghost ball's behavior.
 
     // Game state flags.
     bool isPaused = true;
     bool justStarted = true;
     bool isGameOver = false;
-    bool doRecalculateAI = true;
 
     // Timer things.
     sf::Clock clock;
     float dTime;
     float secondsSinceStarted = 0.f;
-    float secondsSinceAIRecalculated = 0.f;
 
     // Start main loop
     while(window.isOpen()) {
@@ -99,12 +97,10 @@ int main(int argc, char** argv) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-
             // Allow the player to quit with the escape button.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape) {
                 window.close();
             }
-
             // Control pausing with the space bar.
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
                 // If the game is over, mark it as not over and reset the text labels.
@@ -125,9 +121,8 @@ int main(int argc, char** argv) {
                     justStarted = true;
                 }
             }
-
             // Pause if the game loses focus.
-            if (event.type == sf::Event::LostFocus) {
+            else if (event.type == sf::Event::LostFocus) {
                 isPaused = true;
             }
         }
@@ -160,51 +155,28 @@ int main(int argc, char** argv) {
                 leftPaddle.moveDown(dTime);
             }
             else {
+                // This is just used to flag that the paddle shouldn't move.
                 leftPaddle.noMove();
             }
 
             // Move the ball. This also checks for collisions.
             ball.move(dTime, leftPaddle, rightPaddle);
 
-            // If the ball bounced off the player's paddle, create a ghost ball that moves faster
-            // for the AI to follow. We'll never draw this ball, it's just for the AI to use to calculate its moves.
-            if (lastBallDx <= 0 && ball.getDx() > 0) {
-                ghostBall.setPosition(ball.getPosition().x, ball.getPosition().y);
-                ghostBall.setDx(ball.getDx());
-                ghostBall.setDy(ball.getDy());
-            }
-            // Only move the ghost ball if it hasn't gotten to the AI's side yet.
-            if ((ghostBall.getPosition().x + ghostBall.getRadius()) < rightPaddle.getGlobalBounds().left
-                    && ghostBall.getDx() > 0) {
+            // Move the ghost ball used to calculate AI movements.
+            ghostBall.moveAsGhostBall(dTime, lastBallDx, ball, leftPaddle, rightPaddle);
 
-                ghostBall.move(dTime * 1.15f, leftPaddle, rightPaddle);
-            }
-            else {
-                ghostBall.setDx(0.f);
-                ghostBall.setDy(0.f);
-            }
-            // Store the real ball's last speed.
+            // Store the real ball's last speed. Used for the Ghost Ball.
             lastBallDx = ball.getDx();
 
-            // Move the AI paddle. Recalculate direction once every .15 seconds.
-            rightPaddle.moveAsAI(dTime, ghostBall.getDx(), ghostBall.getDy(), ghostBall.getPosition(), doRecalculateAI);
-            if (doRecalculateAI) {
-                secondsSinceAIRecalculated = 0.f;
-                doRecalculateAI = false;
-            }
-            else {
-                secondsSinceAIRecalculated += dTime;
-                if (secondsSinceAIRecalculated >= 0.15f) {
-                    doRecalculateAI = true;
-                }
-            }
+            // Move the AI paddle.
+            rightPaddle.moveAsAI(dTime, ghostBall.getDy(), ghostBall.getPosition());
 
             // Check for a player point.
             if ((ball.getPosition().x + ball.getRadius()) >= GC::WIDTH) {
                 // Don't let the ball clip out of the screen.
                 ball.setPosition(GC::WIDTH - ball.getRadius(), ball.getPosition().y);
                 // Increase player score.
-                playerScore.increment();
+                leftScore.increment();
                 // Reset UI elements.
                 leftPaddle.reset(true);
                 rightPaddle.reset(false);
@@ -220,7 +192,7 @@ int main(int argc, char** argv) {
                 // Don't let the ball clip out of the screen.
                 ball.setPosition(ball.getRadius(), ball.getPosition().y);
                 // Increase AI score.
-                aiScore.increment();
+                rightScore.increment();
                 // Reset UI elements.
                 leftPaddle.reset(true);
                 rightPaddle.reset(false);
@@ -232,13 +204,13 @@ int main(int argc, char** argv) {
             }
 
             // Check for win/loss.
-            if (playerScore.getScore() == 11 || aiScore.getScore() == 11) {
+            if (leftScore.getScore() == 11 || rightScore.getScore() == 11) {
                 // If the player won, give then the winner text.
-                if (playerScore.getScore() == 11) {
+                if (leftScore.getScore() == 11) {
                     header.setString(winHeader);
                 }
                 // If they lost, given them the loser text.
-                if (aiScore.getScore() == 11) {
+                if (rightScore.getScore() == 11) {
                     header.setString(lossHeader);
                 }
 
@@ -249,8 +221,8 @@ int main(int argc, char** argv) {
                 placeHeaders(header, subheader);
 
                 // Reset game elements.
-                playerScore.reset();
-                aiScore.reset();
+                leftScore.reset();
+                rightScore.reset();
                 leftPaddle.reset(true);
                 rightPaddle.reset(false);
                 ball.reset();
@@ -271,10 +243,11 @@ int main(int argc, char** argv) {
         }
         // Draw game components if not paused.
         else {
-            window.draw(playerScore);
-            window.draw(aiScore);
+            window.draw(leftScore);
+            window.draw(rightScore);
             window.draw(leftPaddle);
             window.draw(rightPaddle);
+            //window.draw(ghostBall); // Uncomment this to see the ghost ball.
             window.draw(ball);
         }
 

@@ -18,6 +18,7 @@ typedef enum AIDirection {
 class Paddle : public sf::RectangleShape {
 private:
     float speed;
+    float secondsSinceAIRecalculation;
     Direction direction;
 public:
     // Constructors
@@ -27,7 +28,7 @@ public:
     void moveUp(float distance);
     void moveDown(float distance);
     void noMove();
-    void moveAsAI(float deltaTime, float ballDx, float ballDy, sf::Vector2f ballPosition, bool recalculate);
+    void moveAsAI(float deltaTime, float ballDy, sf::Vector2f ballPosition);
     void reset(bool left);
     // Getters and setters.
     float getSpeed();
