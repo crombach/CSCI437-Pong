@@ -1,0 +1,2 @@
+/usr/bin/ar qc libpong_core.a  CMakeFiles/pong_core.dir/src/Ball.cpp.o CMakeFiles/pong_core.dir/src/CollisionUtils.cpp.o CMakeFiles/pong_core.dir/src/Paddle.cpp.o CMakeFiles/pong_core.dir/src/ScoreLabel.cpp.o CMakeFiles/pong_core.dir/src/TextUtils.cpp.o
+/usr/bin/ranlib libpong_core.a
